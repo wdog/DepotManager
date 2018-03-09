@@ -11,9 +11,8 @@
                     <span class="title">@lang('global.app_dashboard')</span>
                 </a>
             </li>
-            
             @can('users_manage')
-            <li class="treeview">
+                <li class="treeview">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span class="title">@lang('global.user-management.title')</span>
@@ -47,10 +46,18 @@
                             </span>
                         </a>
                     </li>
+                    
+                        <li class="{{ $request->segment(2) == 'groups' ? 'active active-sub' : '' }}">
+                        <a href="{{ route('admin.groups.index') }}">
+                            <i class="fa fa-user"></i>
+                            <span class="title">
+                                @lang('global.groups.title')
+                            </span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endcan
-
             <li class="{{ $request->segment(1) == 'change_password' ? 'active' : '' }}">
                 <a href="{{ route('auth.change_password') }}">
                     <i class="fa fa-key"></i>

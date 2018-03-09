@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUsersRequest extends FormRequest
+class UpdateGroupsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +23,11 @@ class StoreUsersRequest extends FormRequest
      */
     public function rules()
     {
+
+
         return [
-            'name'     => 'required',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required',
-            'roles'    => 'required',
-            'group_id' => 'required',
+            'group_name' => 'required',
+            'slug'       => 'required|unique:groups,slug,' . $this->route( 'group' )->id,
         ];
     }
 }

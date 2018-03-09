@@ -59,6 +59,19 @@
                 </div>
             </div>
             
+               <div class="row">
+                <div class="col-xs-12 form-group">
+                    {!! Form::label('group_id', 'Group*', ['class' => 'control-label']) !!}
+                    {!! Form::select('group_id', $groups, old('group_id') , ['class' => 'form-control select2', 'placeholder' => '',  'required' => '']) !!}
+                    <p class="help-block"></p>
+                    @if($errors->has('group_id'))
+                        <p class="help-block">
+                            {{ $errors->first('group_id') }}
+                        </p>
+                    @endif
+                </div>
+            </div>
+            
         </div>
     </div>
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,31 +15,44 @@ use Hash;
  * @property string $email
  * @property string $password
  * @property string $remember_token
-*/
+ */
 class User extends Authenticatable
 {
     use Notifiable;
     use HasRolesAndAbilities;
 
-    protected $fillable = ['name', 'email', 'password', 'remember_token'];
-    
-    
+
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'remember_token',
+        'group_id',
+
+    ];
+
+
     /**
      * Hash password
+     *
      * @param $input
      */
-    public function setPasswordAttribute($input)
+    public function setPasswordAttribute( $input )
     {
-        if ($input)
-            $this->attributes['password'] = app('hash')->needsRehash($input) ? Hash::make($input) : $input;
+        if ( $input )
+            $this->attributes[ 'password' ] = app( 'hash' )->needsRehash( $input ) ? Hash::make( $input ) : $input;
     }
-    
-    
-    public function role()
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function group()
     {
-        return $this->belongsToMany(Role::class, 'role_user');
+        return $this->belongsTo( Group::class );
     }
-    
-    
-    
+
+
 }

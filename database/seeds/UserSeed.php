@@ -12,11 +12,21 @@ class UserSeed extends Seeder
      */
     public function run()
     {
-        $user = User::create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => bcrypt('password')
-        ]);
-        $user->assign('administrator');
+        $group = \App\Group::create( [
+            'group_name' => 'Administrators',
+            'slug'       => 'admin',
+        ] );
+
+
+
+        $user = User::create( [
+            'name'     => 'Admin',
+            'email'    => 'admin@admin.com',
+            'password' => bcrypt( 'password' ),
+            'group_id' => $group->id
+        ] );
+
+
+        $user->assign( 'administrator' );
     }
 }

@@ -60,6 +60,20 @@
                 </div>
             </div>
             
+            
+             <div class="row">
+                <div class="col-xs-12 form-group">
+                    {!! Form::label('group_id', 'Group*', ['class' => 'control-label']) !!}
+                    {!! Form::select('group_id', $groups, old('group_id') ?old('group_id') : null , ['class' => 'form-control select2',  'required' => '']) !!}
+                    <p class="help-block"></p>
+                    @if($errors->has('group_id'))
+                        <p class="help-block">
+                            {{ $errors->first('group_id') }}
+                        </p>
+                    @endif
+                </div>
+            </div>
+            
         </div>
     </div>
 
