@@ -1,3 +1,12 @@
+##  FORKED
+
+Original version here [laravel-roles-permissions-bouncer](https://github.com/LaravelDaily/laravel-roles-permissions-bouncer)
+
+## Add
+ 
+ - Add Groups
+ - User has one Group   
+
 ## Laravel Roles Permissions Admin - Bouncer version
 
 This is a Laravel 5.4 adminpanel starter project with roles-permissions management based on [Joseph Silber's Bouncer package](https://github.com/JosephSilber/bouncer), [AdminLTE theme](https://adminlte.io/) and [Datatables.net](https://datatables.net).
