@@ -23,11 +23,13 @@ class UpdateGroupsRequest extends FormRequest
      */
     public function rules()
     {
-
-
+        $id = $this->route( 'group' )->id;
         return [
-            'group_name' => 'required',
-            'slug'       => 'required|unique:groups,slug,' . $this->route( 'group' )->id,
+            'name' => 'required',
+            'slug' => [
+                'required',
+                Rule::unique( 'groups' )->where( 'id', '<>', $id ),
+            ],
         ];
     }
 }

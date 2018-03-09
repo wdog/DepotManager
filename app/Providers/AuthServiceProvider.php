@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Depot;
+use App\Policies\DepotPolicy;
 use App\Role;
 use App\User;
 use Illuminate\Support\Facades\Gate;
@@ -15,7 +17,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Model'  => 'App\Policies\ModelPolicy',
+        Depot::class => DepotPolicy::class,
     ];
 
     /**

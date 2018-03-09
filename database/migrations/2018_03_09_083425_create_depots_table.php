@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGroupsTable extends Migration
+class CreateDepotsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreateGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create( 'groups', function ( Blueprint $table ) {
+        Schema::create( 'depots', function ( Blueprint $table ) {
             $table->increments( 'id' );
-            $table->string( 'name' );
-            $table->string( 'slug' )->unique();
+            $table->string( 'name' )->unique();
+
+            $table->integer( 'group_id' )->unsigned();
+            $table->foreign( 'group_id' )->references( 'id' )->on( 'groups' )->onDelete( 'cascade' );
+
             $table->timestamps();
         } );
     }
@@ -28,6 +31,6 @@ class CreateGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists( 'groups' );
+        Schema::dropIfExists( 'depots' );
     }
 }

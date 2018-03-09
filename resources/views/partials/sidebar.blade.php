@@ -58,6 +58,24 @@
                 </ul>
             </li>
             @endcan
+    
+            <li class="{{ $request->segment(1) == 'depots' ? 'active' : '' }}">
+                <a href="{{ route('depots.index') }}">
+                    <i class="fa fa-building"></i>
+                    <span class="title">Depots</span>
+                </a>
+            </li>
+    
+            @can('items_manage')
+            
+            <li class="{{ $request->segment(1) == 'items' ? 'active' : '' }}">
+                <a href="{{ route('items.index') }}">
+                    <i class="fa fa-bookmark"></i>
+                    <span class="title">Items</span>
+                </a>
+            </li>
+            @endcan
+            
             <li class="{{ $request->segment(1) == 'change_password' ? 'active' : '' }}">
                 <a href="{{ route('auth.change_password') }}">
                     <i class="fa fa-key"></i>

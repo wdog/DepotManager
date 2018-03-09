@@ -12,18 +12,23 @@ class UserSeed extends Seeder
      */
     public function run()
     {
-        $group = \App\Group::create( [
-            'group_name' => 'Administrators',
-            'slug'       => 'admin',
+        \App\Group::create( [
+            'name' => 'Workers',
+            'slug' => 'workers',
         ] );
 
+
+        $group = \App\Group::create( [
+            'name' => 'Administrators',
+            'slug' => 'admin',
+        ] );
 
 
         $user = User::create( [
             'name'     => 'Admin',
-            'email'    => 'admin@admin.com',
-            'password' => bcrypt( 'password' ),
-            'group_id' => $group->id
+            'email'    => 'admin@ex.com',
+            'password' => bcrypt( 'admin' ),
+            'group_id' => $group->id,
         ] );
 
 

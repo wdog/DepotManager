@@ -16,7 +16,7 @@ class Group extends Model
     /**
      * @var array
      */
-    protected $fillable = [ 'group_name', 'slug' ];
+    protected $fillable = [ 'name', 'slug' ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

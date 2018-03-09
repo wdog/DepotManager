@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUsersRequest;
 use App\Http\Requests\Admin\UpdateUsersRequest;
+use Bouncer;
 
 class UsersController extends Controller
 {
@@ -23,9 +24,7 @@ class UsersController extends Controller
         if ( !Gate::allows( 'users_manage' ) ) {
             return abort( 401 );
         }
-
         $users = User::with( 'roles' )->get();
-
         return view( 'admin.users.index', compact( 'users' ) );
     }
 
@@ -40,10 +39,8 @@ class UsersController extends Controller
             return abort( 401 );
         }
         $roles = Role::get()->pluck( 'name', 'name' );
-        $groups = Group::get()->pluck( 'group_name','id' );
-
-
-        return view( 'admin.users.create', compact( 'roles' ,'groups') );
+        $groups = Group::get()->pluck( 'group_name', 'id' );
+        return view( 'admin.users.create', compact( 'roles', 'groups' ) );
     }
 
     /**
@@ -79,11 +76,11 @@ class UsersController extends Controller
             return abort( 401 );
         }
         $roles = Role::get()->pluck( 'name', 'name' );
-        $groups = Group::get()->pluck( 'group_name','id' );
+        $groups = Group::get()->pluck( 'group_name', 'id' );
 
         $user = User::findOrFail( $id );
 
-        return view( 'admin.users.edit', compact( 'user', 'roles' ,'groups') );
+        return view( 'admin.users.edit', compact( 'user', 'roles', 'groups' ) );
     }
 
     /**

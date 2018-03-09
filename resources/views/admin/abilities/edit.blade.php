@@ -24,6 +24,19 @@
                 </div>
             </div>
             
+            
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    {!! Form::label('title', 'Title*', ['class' => 'control-label']) !!}
+                    {!! Form::text('title', old('title'), ['class' => 'form-control', 'placeholder' => '', 'required' => '']) !!}
+                    <p class="help-block"></p>
+                    @if($errors->has('title'))
+                        <p class="help-block">
+                            {{ $errors->first('title') }}
+                        </p>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 

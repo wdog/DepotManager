@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Silber\Bouncer\Bouncer;
 use Silber\Bouncer\Database\Ability;
 use Silber\Bouncer\Database\Role;
 use Illuminate\Http\Request;
@@ -19,13 +20,13 @@ class RolesController extends Controller
      */
     public function index()
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
 
         $roles = Role::all();
 
-        return view('admin.roles.index', compact('roles'));
+        return view( 'admin.roles.index', compact( 'roles' ) );
     }
 
     /**
@@ -35,88 +36,89 @@ class RolesController extends Controller
      */
     public function create()
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        $abilities = Ability::get()->pluck('name', 'name');
+        $abilities = Ability::get()->pluck( 'name', 'name' );
 
-        return view('admin.roles.create', compact('abilities'));
+        return view( 'admin.roles.create', compact( 'abilities' ) );
     }
 
     /**
      * Store a newly created Role in storage.
      *
-     * @param  \App\Http\Requests\StoreRolesRequest  $request
+     * @param StoreRolesRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRolesRequest $request)
+    public function store( StoreRolesRequest $request )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
-        $role = Role::create($request->all());
-        $role->allow($request->input('abilities'));
 
-        return redirect()->route('admin.roles.index');
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
+        }
+        $role = Role::create( $request->all() );
+        $role->allow( $request->input( 'abilities' ) );
+
+        return redirect()->route( 'admin.roles.index' );
     }
 
 
     /**
      * Show the form for editing Role.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit( $id )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        $abilities = Ability::get()->pluck('name', 'name');
+        $abilities = Ability::get()->pluck( 'name', 'name' );
 
-        $role = Role::findOrFail($id);
+        $role = Role::findOrFail( $id );
 
-        return view('admin.roles.edit', compact('role', 'abilities'));
+        return view( 'admin.roles.edit', compact( 'role', 'abilities' ) );
     }
 
     /**
      * Update Role in storage.
      *
-     * @param  \App\Http\Requests\UpdateRolesRequest  $request
-     * @param  int  $id
+     * @param  UpdateRolesRequest $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRolesRequest $request, $id)
+    public function update( UpdateRolesRequest $request, $id )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        $role = Role::findOrFail($id);
-        $role->update($request->all());
-        foreach ($role->getAbilities() as $ability) {
-            $role->disallow($ability->name);
+        $role = Role::findOrFail( $id );
+        $role->update( $request->all() );
+        foreach ( $role->getAbilities() as $ability ) {
+            $role->disallow( $ability->name );
         }
-        $role->allow($request->input('abilities'));
+        $role->allow( $request->input( 'abilities' ) );
 
-        return redirect()->route('admin.roles.index');
+        return redirect()->route( 'admin.roles.index' );
     }
 
 
     /**
      * Remove Role from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy( $id )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        $role = Role::findOrFail($id);
+        $role = Role::findOrFail( $id );
         $role->delete();
 
-        return redirect()->route('admin.roles.index');
+        return redirect()->route( 'admin.roles.index' );
     }
 
     /**
@@ -124,15 +126,15 @@ class RolesController extends Controller
      *
      * @param Request $request
      */
-    public function massDestroy(Request $request)
+    public function massDestroy( Request $request )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        if ($request->input('ids')) {
-            $entries = Role::whereIn('id', $request->input('ids'))->get();
+        if ( $request->input( 'ids' ) ) {
+            $entries = Role::whereIn( 'id', $request->input( 'ids' ) )->get();
 
-            foreach ($entries as $entry) {
+            foreach ( $entries as $entry ) {
                 $entry->delete();
             }
         }

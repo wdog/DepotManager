@@ -66,6 +66,10 @@ class GroupsController extends Controller
     }
 
 
+    /**
+     * @param Group $group
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     */
     public function edit( Group $group )
     {
         if ( !Gate::allows( 'users_manage' ) ) {

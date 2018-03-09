@@ -6,7 +6,7 @@
     <p>
         <a href="{{ route('admin.abilities.create') }}" class="btn btn-success">@lang('global.app_add_new')</a>
     </p>
-
+    
     <div class="panel panel-default">
         <div class="panel-heading">
             @lang('global.app_list')
@@ -16,8 +16,9 @@
             <table class="table table-bordered table-striped {{ count($abilities) > 0 ? 'datatable' : '' }} dt-select">
                 <thead>
                     <tr>
-                        <th style="text-align:center;"><input type="checkbox" id="select-all" /></th>
+                        <th style="text-align:center;"><input type="checkbox" id="select-all"/></th>
                         <th>@lang('global.abilities.fields.name')</th>
+                        <th>@lang('global.abilities.fields.title')</th>
                         <th>&nbsp;</th>
 
                     </tr>
@@ -29,6 +30,7 @@
                             <tr data-entry-id="{{ $ability->id }}">
                                 <td></td>
                                 <td>{{ $ability->name }}</td>
+                                   <td>{{ $ability->title }}</td>
                                 <td>
                                     <a href="{{ route('admin.abilities.edit',[$ability->id]) }}" class="btn btn-xs btn-info">@lang('global.app_edit')</a>
                                     {!! Form::open(array(
@@ -53,7 +55,7 @@
     </div>
 @stop
 
-@section('javascript') 
+@section('javascript')
     <script>
         window.route_mass_crud_entries_destroy = '{{ route('admin.abilities.mass_destroy') }}';
     </script>

@@ -18,13 +18,13 @@ class AbilitiesController extends Controller
      */
     public function index()
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
 
         $abilities = Ability::all();
 
-        return view('admin.abilities.index', compact('abilities'));
+        return view( 'admin.abilities.index', compact( 'abilities' ) );
     }
 
     /**
@@ -34,79 +34,79 @@ class AbilitiesController extends Controller
      */
     public function create()
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        return view('admin.abilities.create');
+        return view( 'admin.abilities.create' );
     }
 
     /**
      * Store a newly created Ability in storage.
      *
-     * @param  \App\Http\Requests\StoreAbilitiesRequest  $request
+     * @param  StoreAbilitiesRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAbilitiesRequest $request)
+    public function store( StoreAbilitiesRequest $request )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        Ability::create($request->all());
+        Ability::create( $request->all() );
 
-        return redirect()->route('admin.abilities.index');
+        return redirect()->route( 'admin.abilities.index' );
     }
 
 
     /**
      * Show the form for editing Ability.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit( $id )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        $ability = Ability::findOrFail($id);
+        $ability = Ability::findOrFail( $id );
 
-        return view('admin.abilities.edit', compact('ability'));
+        return view( 'admin.abilities.edit', compact( 'ability' ) );
     }
 
     /**
      * Update Ability in storage.
      *
-     * @param  \App\Http\Requests\UpdateAbilitiesRequest  $request
-     * @param  int  $id
+     * @param  UpdateAbilitiesRequest $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAbilitiesRequest $request, $id)
+    public function update( UpdateAbilitiesRequest $request, $id )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        $ability = Ability::findOrFail($id);
-        $ability->update($request->all());
+        $ability = Ability::findOrFail( $id );
+        $ability->update( $request->all() );
 
-        return redirect()->route('admin.abilities.index');
+        return redirect()->route( 'admin.abilities.index' );
     }
 
 
     /**
      * Remove Ability from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy( $id )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        $ability = Ability::findOrFail($id);
+        $ability = Ability::findOrFail( $id );
         $ability->delete();
 
-        return redirect()->route('admin.abilities.index');
+        return redirect()->route( 'admin.abilities.index' );
     }
 
     /**
@@ -114,15 +114,15 @@ class AbilitiesController extends Controller
      *
      * @param Request $request
      */
-    public function massDestroy(Request $request)
+    public function massDestroy( Request $request )
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
+        if ( !Gate::allows( 'users_manage' ) ) {
+            return abort( 401 );
         }
-        if ($request->input('ids')) {
-            $entries = Ability::whereIn('id', $request->input('ids'))->get();
+        if ( $request->input( 'ids' ) ) {
+            $entries = Ability::whereIn( 'id', $request->input( 'ids' ) )->get();
 
-            foreach ($entries as $entry) {
+            foreach ( $entries as $entry ) {
                 $entry->delete();
             }
         }

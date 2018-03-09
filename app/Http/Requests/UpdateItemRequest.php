@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreGroupsRequest extends FormRequest
+class UpdateItemRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +24,14 @@ class StoreGroupsRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->route( 'item' )->id;
         return [
+            'code' => [
+                'required',
+                Rule::unique( 'items' )->where( 'id', '<>', $id ),
+            ],
             'name' => 'required',
-            'slug' => 'required|unique:groups,slug',
+            'um'   => 'required',
         ];
     }
 }
