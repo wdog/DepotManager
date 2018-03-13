@@ -22,5 +22,7 @@
 </script>
 
 
-
+<!-- DELETER -->
+<script src="/js/deleter.js"></script>
+<!-- CUSTOM JS -->
 @yield('javascript')

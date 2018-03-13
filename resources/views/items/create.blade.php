@@ -41,7 +41,7 @@
            <div class="row">
                 <div class="col-xs-12 form-group">
                     {!! Form::label('um', 'Unit*', ['class' => 'control-label']) !!}
-                    {!! Form::select('um', ['MT'=>'MT','NR'=>'NR'], old('um'), ['class' => 'select2 form-control', 'placeholder' => '', 'required' => '']) !!}
+                    {!! Form::select('um', \App\Utils\Helpers::ComboUnita(), old('um'), ['class' => 'select2 form-control', 'placeholder' => '', 'required' => '']) !!}
                     <p class="help-block"></p>
                     @if($errors->has('um'))
                         <p class="help-block">
