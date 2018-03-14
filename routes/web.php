@@ -34,15 +34,16 @@ Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'admin', 'as' => 'admin.
 
 } );
 
+// Depots
 Route::group( [ 'middleware' => [ 'auth' ], ], function () {
+    // Add Items to Depot
+    Route::get( 'depots/{depot}/item/add', [ 'uses' => 'DepotController@addItem', 'as' => 'depots.add_item' ] );
+    Route::post( 'depots/{depot}/item', [ 'uses' => 'DepotController@storeItem', 'as' => 'depots.store_item' ] );
     Route::resource( 'depots', 'DepotController' );
+
 } );
 
-
-Route::group( [ 'middleware' => [ 'auth' ]], function () {
-
-
+// Items
+Route::group( [ 'middleware' => [ 'auth' ] ], function () {
     Route::resource( 'items', 'ItemController' );
-
-
 } );

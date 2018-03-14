@@ -23,11 +23,12 @@ class Item extends Model
     ];
 
 
+    /**
+     * @var array
+     */
     protected $casts = [
         'disabled' => 'boolean',
     ];
-
-
 
     /**
      * SCOPE only elemenents who can be stored into a depot
@@ -40,4 +41,14 @@ class Item extends Model
         return $query->whereDisabled( false );
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function depots()
+    {
+        return $this->belongsToMany( Depot::class )->withPivot( [
+            'qta_ini', 'qta_depot', 'serial',
+        ] )->withTimestamps();
+    }
 }

@@ -6,15 +6,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Utils\Helpers;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 
 use App\Item;
 use Illuminate\Http\Request;
 use ViewComponents\Eloquent\EloquentDataProvider;
 use ViewComponents\Grids\Component\AjaxDetailsRow;
 use ViewComponents\Grids\Component\Column;
-use ViewComponents\Grids\Component\DetailsRow;
-use ViewComponents\Grids\Component\TableCaption;
 use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Component\Control\FilterControl;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
@@ -78,7 +76,7 @@ class ItemController extends Controller
             ] );
 
         BootstrapStyling::applyTo( $grid );
-        $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'style', 'width:180px' );
+        $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
         $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
         $grid = $grid->render();
 
@@ -131,7 +129,7 @@ class ItemController extends Controller
     /**
      * @param Item $item
      * @param UpdateItemRequest $request
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return \Illuminate\Http\RedirectResponse
      * @internal param Group $group
      */
     public function update( Item $item, UpdateItemRequest $request )
@@ -149,7 +147,7 @@ class ItemController extends Controller
 
     /**
      * @param Item $item
-     * @return Item|void
+     * @return string
      */
     public function show( Item $item )
     {

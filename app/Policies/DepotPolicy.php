@@ -11,7 +11,7 @@ class DepotPolicy
     use HandlesAuthorization;
 
 
-    public function before( $user, $ability )
+    public function before( $user )
     {
         if ( $user->isAn( 'administrator' ) ) {
             return true;
@@ -46,10 +46,9 @@ class DepotPolicy
      * Determine whether the user can update the depot.
      *
      * @param  \App\User $user
-     * @param  Depot $depot
      * @return mixed
      */
-    public function update( User $user, Depot $depot )
+    public function update( User $user )
     {
         return false;
     }
@@ -58,12 +57,12 @@ class DepotPolicy
      * Determine whether the user can delete the depot.
      *
      * @param  \App\User $user
-     * @param  Depot $depot
      * @return mixed
      */
-    public function delete( User $user, Depot $depot )
+    public function delete( User $user )
     {
         return false;
     }
+
 
 }

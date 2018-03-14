@@ -12,10 +12,6 @@ class UserSeed extends Seeder
      */
     public function run()
     {
-        \App\Group::create( [
-            'name' => 'Workers',
-            'slug' => 'workers',
-        ] );
 
 
         $group = \App\Group::create( [
@@ -33,5 +29,20 @@ class UserSeed extends Seeder
 
 
         $user->assign( 'administrator' );
+
+        $group2 = \App\Group::create( [
+            'name' => 'Workers',
+            'slug' => 'workers',
+        ] );
+
+        $user2 = User::create( [
+            'name'     => 'Coyote',
+            'email'    => 'coyote@ex.com',
+            'password' => bcrypt( 'coyote' ),
+            'group_id' => $group2->id,
+        ] );
+
+        $user->assign( 'worker' );
+
     }
 }
