@@ -39,7 +39,7 @@ class UsersController extends Controller
             return abort( 401 );
         }
         $roles = Role::get()->pluck( 'name', 'name' );
-        $groups = Group::get()->pluck( 'group_name', 'id' );
+        $groups = Group::get()->pluck( 'name', 'id' );
         return view( 'admin.users.create', compact( 'roles', 'groups' ) );
     }
 
@@ -76,7 +76,8 @@ class UsersController extends Controller
             return abort( 401 );
         }
         $roles = Role::get()->pluck( 'name', 'name' );
-        $groups = Group::get()->pluck( 'group_name', 'id' );
+        $groups = Group::get()->pluck( 'name', 'id' );
+
 
         $user = User::findOrFail( $id );
 

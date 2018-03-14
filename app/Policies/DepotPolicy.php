@@ -39,7 +39,7 @@ class DepotPolicy
      */
     public function create( User $user )
     {
-        //
+        return false;
     }
 
     /**
@@ -51,7 +51,7 @@ class DepotPolicy
      */
     public function update( User $user, Depot $depot )
     {
-        //
+        return false;
     }
 
     /**
@@ -63,6 +63,7 @@ class DepotPolicy
      */
     public function delete( User $user, Depot $depot )
     {
-        //
+        return false;
     }
+
 }

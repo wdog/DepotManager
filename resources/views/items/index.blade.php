@@ -2,23 +2,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <h3 class="page-title">@lang('global.items.title')</h3>
-    <p>
-        <a href="{{ route('items.create') }}" class="btn btn-success">@lang('global.app_add_new')</a>
-    </p>
-    
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            @lang('global.app_list')
+    <div class="card card-default">
+        <div class="card-header">
+                <h3 class="pull-left">Items</h3>
+                <a href="{{ route('items.create') }}" class="pull-right btn btn-sm btn-success">@lang('global.app_add_new')</a>
         </div>
 
-        <div class="panel-body">
+        <div class="card-body">
             {!! $grid or '' !!}
         </div>
-      
-
     </div>
-
 @stop
 
 @section('javascript')

@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Roles-Permissions Manager',
+    'name' => 'dEPOTS',
 
     /*
     |--------------------------------------------------------------------------
@@ -182,7 +182,6 @@ return [
         Laravel\Tinker\TinkerServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-
         /*
          * Application Service Providers...
          */

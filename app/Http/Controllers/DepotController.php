@@ -10,6 +10,13 @@ use App\Policies\DepotPolicy;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use ViewComponents\Eloquent\EloquentDataProvider;
+use ViewComponents\Grids\Component\Column;
+use ViewComponents\Grids\Grid;
+use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
+use ViewComponents\ViewComponents\Component\Control\PaginationControl;
+use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
+use ViewComponents\ViewComponents\Input\InputSource;
 
 /**
  * Class DepotController
@@ -23,8 +30,45 @@ class DepotController extends Controller
      */
     public function index()
     {
-        $depots = Depot::list()->paginate( 5 );
-        return view( 'depots.index', compact( 'depots' ) );
+
+        $provider = new EloquentDataProvider( Depot::list() );
+        $input = new InputSource( $_GET );
+        $grid = new Grid(
+            $provider, [
+                ( new Column( 'name' ) ),
+                ( new Column( 'actions' ) )
+                    ->setValueCalculator( function ( $row ) {
+
+                        $edit = '';
+                        $delete = '';
+
+                        if (Auth::user()->can('update'))
+                            $edit = link_to_route( 'depots.edit', '', $row->id, [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
+                        if (Auth::user()->can('delete'))
+                        $delete = link_to_route( 'depots.destroy', '', $row->id, [
+                            'class'        => 'btn btn-xs btn-danger fa fa-trash',
+                            'data-method'  => "delete",
+                            'data-confirm' => "Are you sure?",
+
+                        ] );
+                        $view = link_to_route( 'depots.show', '', $row->id, [ 'class' => 'btn btn-xs btn-success fa fa-eye' ] );
+                        return $view . " " . $edit . " " . $delete;
+                    } ),
+
+                new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
+                new PaginationControl( $input->option( 'page', 1 ), 5 ),
+            ]
+        );
+
+
+        BootstrapStyling::applyTo( $grid );
+
+        $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'style', 'width:180px' );
+
+        $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
+        $grid = $grid->render();
+
+        return view( 'depots.index', compact( 'grid' ) );
     }
 
 
@@ -64,6 +108,9 @@ class DepotController extends Controller
      */
     public function edit( Depot $depot )
     {
+        if ( !Gate::allows( 'depots_manage' ) ) {
+            return abort( 401 );
+        }
         $groups = Group::pluck( 'name', 'id' );
         return view( 'depots.edit', compact( 'depot', 'groups' ) );
     }
@@ -86,20 +133,24 @@ class DepotController extends Controller
 
     /**
      * @param Depot $depot
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show( Depot $depot )
     {
         $this->authorize( 'view', $depot );
-        // TODO
-        dd( $depot );
+        return view( 'depots.view', compact( 'depot' ) );
     }
 
 
     /**
      * @param Depot $depot
      */
-    public function delete( Depot $depot )
+    public function destroy( Depot $depot )
     {
-// TODO
+        if ( !Gate::allows( 'depots_manage' ) ) {
+            return abort( 401 );
+        }
+        // TODO
+        // controllare che non ci sia nessun oggetto dentro poi si puo disabilitare non cancellare
     }
 }

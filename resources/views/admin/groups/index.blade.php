@@ -18,7 +18,7 @@
                     <tr>
                         <th style="text-align:center;"><input type="checkbox" id="select-all"/></th>
 
-                        <th>@lang('global.groups.fields.group_name')</th>
+                        <th>@lang('global.groups.fields.name')</th>
                         <th>@lang('global.groups.fields.slug')</th>
                         <th>@lang('global.groups.fields.users')</th>
                         <th>&nbsp;</th>

@@ -51,21 +51,17 @@ class ItemController extends Controller
             $provider,
             // all components are optional, you can specify only columns
             [
-                new TableCaption( 'Items' ),
-                new Column( 'id' ),
-                new Column( 'code' ),
                 new FilterControl( 'code', FilterOperation::OPERATOR_STR_CONTAINS, $input->option( 'code' ) ),
-
-                new Column( 'name' ),
-
-                
                 new SelectFilterControl( 'um', Helpers::ComboUnita(), $input->option( 'um' ) ),
 
+
+                new Column( 'code' ),
+                new Column( 'name' ),
                 ( new Column( 'actions' ) )
                     ->setValueCalculator( function ( $row ) {
-                        $edit = link_to_route( 'items.edit', 'Edit', $row->id, [ 'class' => 'btn btn-xs btn-info' ] );
-                        $delete = link_to_route( 'items.destroy', 'Destroy', $row->id, [
-                            'class'        => 'btn btn-xs btn-danger',
+                        $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
+                        $delete = link_to_route( 'items.destroy', '', $row->id, [
+                            'class'        => 'btn btn-xs btn-danger fa fa-trash',
                             'data-method'  => "delete",
                             'data-confirm' => "Are you sure?",
 
@@ -73,8 +69,8 @@ class ItemController extends Controller
                         return $edit . " " . $delete;
                     } ),
 
-                new PaginationControl( $input->option( 'page', 1 ), 5 ),
                 new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
+                new PaginationControl( $input->option( 'page', 1 ), 5 ),
 
                 new AjaxDetailsRow( function ( $row ) {
                     return route( 'items.show', $row->id );
@@ -82,6 +78,8 @@ class ItemController extends Controller
             ] );
 
         BootstrapStyling::applyTo( $grid );
+        $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'style', 'width:180px' );
+        $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
         $grid = $grid->render();
 
         return view( 'items.index', compact( 'grid' ) );
@@ -165,7 +163,6 @@ class ItemController extends Controller
         $grid = new Grid(
             $provider,
             [
-                new TableCaption( 'Detail' ),
                 ( new Column( 'um' ) )->setLabel( 'Unit' ),
 
                 ( new Column( 'disabled' ) )

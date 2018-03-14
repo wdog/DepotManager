@@ -35,7 +35,7 @@
 
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->group->group_name }}</td>
+                                <td>{{ $user->group->name }}</td>
                                 <td>
                                     @foreach ($user->roles->pluck('name') as $role)
                                         <span class="label label-info label-many">{{ $role }}</span>
