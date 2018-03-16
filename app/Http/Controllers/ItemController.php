@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use ViewComponents\Eloquent\EloquentDataProvider;
 use ViewComponents\Grids\Component\AjaxDetailsRow;
 use ViewComponents\Grids\Component\Column;
+use ViewComponents\Grids\Component\DetailsRow;
 use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Component\Control\FilterControl;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
@@ -70,9 +71,7 @@ class ItemController extends Controller
                 new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
                 new PaginationControl( $input->option( 'page', 1 ), 5 ),
 
-                new AjaxDetailsRow( function ( $row ) {
-                    return route( 'items.show', $row->id );
-                } ),
+
             ] );
 
         BootstrapStyling::applyTo( $grid );
@@ -176,7 +175,9 @@ class ItemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param Item $item
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy( Item $item )
     {

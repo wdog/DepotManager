@@ -40,7 +40,6 @@ class DepotController extends Controller
      */
     public function index()
     {
-
         $provider = new EloquentDataProvider( Depot::list() );
         $input = new InputSource( $_GET );
         $grid = new Grid(
@@ -149,11 +148,12 @@ class DepotController extends Controller
     /**
      * @param Depot $depot
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show( Depot $depot )
     {
         $this->authorize( 'view', $depot );
-        $provider = new ArrayDataProvider( $depot->items );
+        $provider = new ArrayDataProvider( $depot->itemsActive );
 
         $columns = [
             new Column( 'code' ),
@@ -203,7 +203,7 @@ class DepotController extends Controller
         if ( !Gate::allows( 'depots_manage' ) ) {
             return abort( 401 );
         }
-        $items = \App\Item::enabled()->get()->pluck( 'full_name', 'id' );
+        $items = Item::enabled()->get()->pluck( 'full_name', 'id' );
         return view( 'depots.items.add', compact( 'depot', 'items' ) );
     }
 

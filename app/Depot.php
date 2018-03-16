@@ -53,4 +53,17 @@ class Depot extends Model
             'id', 'qta_ini', 'qta_depot', 'serial',
         ] )->withTimestamps();
     }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function itemsActive()
+    {
+        return $this->belongsToMany( Item::class )->withPivot( [
+            'id', 'qta_ini', 'qta_depot', 'serial',
+        ] )->wherePivot( 'qta_depot', '>', 0 )->withTimestamps();
+    }
+
+
 }
