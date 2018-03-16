@@ -4,7 +4,7 @@
 @section('content')
     <div class="card card-default">
         <div class="card-header">
-                <h3 class="pull-left">Items</h3>
+                <h4 class="pull-left">Items</h4>
                 <a href="{{ route('items.create') }}" class="pull-right btn btn-sm btn-success">@lang('global.app_add_new')</a>
         </div>
 

@@ -39,6 +39,11 @@ Route::group( [ 'middleware' => [ 'auth' ], ], function () {
     // Add Items to Depot
     Route::get( 'depots/{depot}/item/add', [ 'uses' => 'DepotController@addItem', 'as' => 'depots.add_item' ] );
     Route::post( 'depots/{depot}/item', [ 'uses' => 'DepotController@storeItem', 'as' => 'depots.store_item' ] );
+
+
+    // unload item from depot
+    Route::get( 'depots/{depot}/item/{item}/unload', [ 'uses' => 'DepotController@unloadItem', 'as' => 'depots.unload_item' ] );
+    Route::post( 'depots/{depot}/item/{item}/unload', [ 'uses' => 'DepotController@createMovementItem', 'as' => 'depots.movement_item' ] );
     Route::resource( 'depots', 'DepotController' );
 
 } );

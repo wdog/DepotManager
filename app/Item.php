@@ -22,7 +22,6 @@ class Item extends Model
         'disabled',
     ];
 
-
     /**
      * @var array
      */
@@ -41,14 +40,21 @@ class Item extends Model
         return $query->whereDisabled( false );
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function depots()
     {
         return $this->belongsToMany( Depot::class )->withPivot( [
-            'qta_ini', 'qta_depot', 'serial',
+            'id', 'qta_ini', 'qta_depot', 'serial',
         ] )->withTimestamps();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return $this->code . " - " . $this->name . " - " . $this->um;
     }
 }

@@ -1,6 +1,6 @@
 <script>
     window._token = '{{ csrf_token() }}';
-    $('.select2').select2({'theme': 'classic'});
+    $('.select2').select2({'theme': 'default'});
 </script>
 
 <!-- DELETER -->

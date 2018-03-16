@@ -19,4 +19,13 @@ class Helpers
     {
         return [ '' => '---', 'MT' => 'MT', 'NR' => 'NR' ];
     }
+
+    public static function ComboReasons()
+    {
+        return [
+            ''  => '---',
+            'I' => 'INFRASTRUTTURA',
+            'C' => 'ALLACCIO CLIENTI',
+        ];
+    }
 }

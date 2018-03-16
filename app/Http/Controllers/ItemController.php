@@ -50,12 +50,12 @@ class ItemController extends Controller
             // all components are optional, you can specify only columns
             [
                 new FilterControl( 'code', FilterOperation::OPERATOR_STR_CONTAINS, $input->option( 'code' ) ),
-                new SelectFilterControl( 'um', Helpers::ComboUnita(), $input->option( 'um' ) ),
+                //new SelectFilterControl( 'um', Helpers::ComboUnita(), $input->option( 'um' ) ),
 
 
                 new Column( 'code' ),
                 new Column( 'name' ),
-                ( new Column( 'actions' ) )
+                ( new Column( 'actions','' ) )
                     ->setValueCalculator( function ( $row ) {
                         $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
                         $delete = link_to_route( 'items.destroy', '', $row->id, [

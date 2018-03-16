@@ -5,9 +5,6 @@ namespace App\Utils;
 
 
 use Nayjest\Tree\ChildNodeTrait;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\CliDumper;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Base\DataViewComponentInterface;
@@ -47,18 +44,15 @@ class ItemDetail implements DataViewComponentInterface, ArrayDataAggregateInterf
         $provider = new ArrayDataProvider( collect( [ $this->getData() ] ) );
         $columns = [
             new Column( 'name', 'Item Name' ),
-            new Column( 'um', 'Unit' ),
-            new Column( 'pivot.qta_ini', 'Qta Ini' ),
-            ( new Column( 'actions' ) )
+            ( new Column( 'pivot.qta_ini', 'Qta Initial' ) )
                 ->setValueCalculator( function ( $row ) {
-                    return link_to_route( 'depots.edit', '', $row->id, [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
-
+                    return $row->pivot->qta_ini . " " . $row->um . ".";
                 } ),
 
         ];
         $grid = new Grid( $provider, $columns );
         BootstrapStyling::applyTo( $grid );
-
+        $grid->getColumn( 'pivot.qta_ini' )->getDataCell()->setAttribute( 'class', 'text-right' );
         return $grid->render();
     }
 }

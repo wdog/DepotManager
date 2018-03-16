@@ -50,7 +50,7 @@ class Depot extends Model
     public function items()
     {
         return $this->belongsToMany( Item::class )->withPivot( [
-            'qta_ini', 'qta_depot', 'serial',
+            'id', 'qta_ini', 'qta_depot', 'serial',
         ] )->withTimestamps();
     }
 }

@@ -8,11 +8,7 @@
 @include('partials.topbar')
 
 
-@if (Session::has('message'))
-    <div class="alert alert-info">
-    <p>{{ Session::get('message') }}</p>
-</div>
-@endif
+
 
 {{--
 @if ($errors->count() > 0)
@@ -31,12 +27,21 @@
 
 <!-- Begin page content -->
 <main role="main" class="container">
-            @yield('content')
+    @if (Session::has('message'))
+		<div class="alert alert-info">
+            <p>{{ Session::get('message') }}</p>
+		</div>
+	@endif
+	
+	@if (Session::has('error'))
+		<div class="alert alert-danger">
+            <p>{{ Session::get('error') }}</p>
+		</div>
+	@endif
+	
+	
+	@yield('content')
 </main>
-
-
-
-
 {!! Form::open(['route' => 'auth.logout', 'style' => 'display:none;', 'id' => 'logout']) !!}
 <button type="submit">Logout</button>
 {!! Form::close() !!}
