@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreRolesRequest;
 use App\Http\Requests\Admin\UpdateRolesRequest;
+use ViewComponents\Eloquent\EloquentDataProvider;
+use ViewComponents\Grids\Component\Column;
+use ViewComponents\Grids\Grid;
+use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
 
 class RolesController extends Controller
 {
@@ -24,9 +28,33 @@ class RolesController extends Controller
             return abort( 401 );
         }
 
-        $roles = Role::all();
 
-        return view( 'admin.roles.index', compact( 'roles' ) );
+        $provider = new EloquentDataProvider( Role::class );
+
+        $columns = [
+            new Column( 'name' ),
+            new Column( 'title' ),
+
+            ( new Column( 'actions', '' ) )
+                ->setValueCalculator( function ( $row ) {
+                    $edit =  link_to_route( 'admin.roles.edit', '', [ $row->id ], [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
+                    $delete = link_to_route( 'admin.roles.destroy', '', $row->id, [
+                        'class'        => 'btn btn-xs btn-danger fa fa-trash',
+                        'data-method'  => "delete",
+                        'data-confirm' => "Are you sure?",
+
+                    ] );
+                    return $edit . " " . $delete;
+                } ),
+        ];
+
+        $grid = new Grid( $provider, $columns );
+        $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
+        BootstrapStyling::applyTo( $grid );
+
+
+
+        return view( 'admin.roles.index', compact( 'grid' ) );
     }
 
     /**

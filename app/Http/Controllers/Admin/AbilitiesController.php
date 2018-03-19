@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use Silber\Bouncer\Database\Ability;
+use ViewComponents\Eloquent\EloquentDataProvider;
+use ViewComponents\Grids\Component\Column;
+use ViewComponents\Grids\Component\DetailsRow;
+use ViewComponents\Grids\Grid;
+use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
+use ViewComponents\ViewComponents\Data\ArrayDataProvider;
 
 class AbilitiesController extends Controller
 {
@@ -22,9 +28,32 @@ class AbilitiesController extends Controller
             return abort( 401 );
         }
 
-        $abilities = Ability::all();
+        $provider = new EloquentDataProvider( Ability::class );
 
-        return view( 'admin.abilities.index', compact( 'abilities' ) );
+        $columns = [
+            new Column( 'title' ),
+            new Column( 'name' ),
+
+            ( new Column( 'actions', '' ) )
+                ->setValueCalculator( function ( $row ) {
+
+                    $edit = link_to_route( 'admin.abilities.edit', '', [ $row->id ], [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
+                    $delete = link_to_route( 'admin.abilities.destroy', '', $row->id, [
+                        'class'        => 'btn btn-xs btn-danger fa fa-trash',
+                        'data-method'  => "delete",
+                        'data-confirm' => "Are you sure?",
+
+                    ] );
+                    return $edit . " " . $delete;
+                } ),
+
+        ];
+
+        $grid = new Grid( $provider, $columns );
+        BootstrapStyling::applyTo( $grid );
+
+        $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
+        return view( 'admin.abilities.index', compact( 'grid' ) );
     }
 
     /**
@@ -110,7 +139,7 @@ class AbilitiesController extends Controller
     }
 
     /**
-     * Delete all selected Ability at once.
+     * Delete all selected Ability at once. - NOT USED
      *
      * @param Request $request
      */

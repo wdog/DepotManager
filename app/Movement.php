@@ -21,7 +21,6 @@ class Movement extends Model
 
     ];
 
-    // $m = \App\DepotItem::find(17)->movements->first()
     /**
      *
      */

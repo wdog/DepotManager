@@ -12,12 +12,9 @@ use App\Http\Requests\UpdateDepotRequest;
 use App\Item;
 use App\Movement;
 use App\Utils\ItemDetail;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use ViewComponents\Eloquent\EloquentDataProvider;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\Grids\Component\DetailsRow;
@@ -53,24 +50,20 @@ class DepotController extends Controller
                         $delete = '';
                         // only admin can update depot
                         if ( Auth::user()->can( 'update', Depot::class ) ) {
-                            $edit = link_to_route( 'depots.edit', '', $row->id, [ 'class' => 'btn btn-info fa fa-pencil' ] );
+                            $edit = link_to_route( 'depots.edit', '', $row->id, [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
                         }
                         // only admin can delete depot
                         if ( Auth::user()->can( 'delete', Depot::class ) ) {
                             $delete = link_to_route( 'depots.destroy', '', $row->id, [
-                                'class'        => 'btn btn-danger fa fa-trash',
+                                'class'        => 'btn btn-danger btn-xs fa fa-trash',
                                 'data-method'  => "delete",
                                 'data-confirm' => "Are you sure?",
 
                             ] );
                         }
                         // view button
-                        $view = link_to_route( 'depots.show', '', $row->id, [ 'class' => 'btn btn-success fa fa-eye' ] );
-
-                        $buttons = '<div class="btn-group btn-group-xs" role="group" aria-label="actions">';
-                        $buttons .= $view . " " . $edit . " " . $delete;
-                        $buttons .= '</div>';
-
+                        $view = link_to_route( 'depots.show', '', $row->id, [ 'class' => 'btn btn-xs btn-success fa fa-eye' ] );
+                        $buttons = $view . " " . $edit . " " . $delete;
                         return $buttons;
                     } ),
 
@@ -81,7 +74,6 @@ class DepotController extends Controller
         BootstrapStyling::applyTo( $grid );
         $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
         $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
-        $grid = $grid->render();
 
         return view( 'depots.index', compact( 'grid' ) );
     }
@@ -243,6 +235,13 @@ class DepotController extends Controller
     }
 
 
+    /**
+     * @param StoreMovementRequest $request
+     * @param Depot $depot
+     * @param $pivot_id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function createMovementItem( StoreMovementRequest $request, Depot $depot, $pivot_id )
     {
         $this->authorize( 'view', $depot );

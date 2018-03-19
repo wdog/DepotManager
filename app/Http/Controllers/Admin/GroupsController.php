@@ -10,6 +10,10 @@ use App\Http\Requests\Admin\UpdateGroupsRequest;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
+use ViewComponents\Eloquent\EloquentDataProvider;
+use ViewComponents\Grids\Component\Column;
+use ViewComponents\Grids\Grid;
+use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
 
 /**
  * Class GroupsController
@@ -28,10 +32,35 @@ class GroupsController extends Controller
         if ( !Gate::allows( 'users_manage' ) ) {
             return abort( 401 );
         }
+        $provider = new EloquentDataProvider( Group::with('users'));
+        $columns = [
+            new Column( 'name' ),
 
-        $groups = Group::with( 'users' )->get();
+            ( new Column( 'users', '' ) )->setValueFormatter( function ( $row ) {
+                $u = '';
+                foreach( $row as $user){
+                    $u .= "<li>" . $user->name . "</li>";
+                }
+                return "<ul class='list-unstyled list-group'>" . $u . "</ul>";
+            } ),
 
-        return view( 'admin.groups.index', compact( 'groups' ) );
+            ( new Column( 'actions', '' ) )
+                ->setValueCalculator( function ( $row ) {
+                    $edit = link_to_route( 'admin.users.edit', '', [ $row->id ], [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
+                    $delete = link_to_route( 'admin.users.destroy', '', $row->id, [
+                        'class'        => 'btn btn-xs btn-danger fa fa-trash',
+                        'data-method'  => "delete",
+                        'data-confirm' => "Are you sure?",
+
+                    ] );
+                    return $edit . " " . $delete;
+                } ),
+        ];
+
+        $grid = new Grid( $provider, $columns );
+        BootstrapStyling::applyTo( $grid );
+        $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
+        return view( 'admin.groups.index', compact( 'grid' ) );
     }
 
     /**
