@@ -1,24 +1,25 @@
 <?php
-
+/**
+ * Created by PhpStorm.
+ * User: chech
+ * Date: 20/03/18
+ * Time: 17.15
+ */
 
 namespace App\Utils;
 
 
-use App\DepotItem;
-use function mp\setValue;
+use App\Item;
 use Nayjest\Tree\ChildNodeTrait;
-use ViewComponents\Grids\Component\AjaxDetailsRow;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\Grids\Component\TableCaption;
 use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Base\DataViewComponentInterface;
-use ViewComponents\ViewComponents\Component\Html\Tag;
-use ViewComponents\ViewComponents\Component\Html\TagWithText;
-use ViewComponents\ViewComponents\Component\Part;
 use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
 use ViewComponents\ViewComponents\Data\ArrayDataAggregateInterface;
 use ViewComponents\ViewComponents\Data\ArrayDataAggregateTrait;
 use ViewComponents\ViewComponents\Data\ArrayDataProvider;
+use ViewComponents\ViewComponents\Data\DataAggregateInterface;
 use ViewComponents\ViewComponents\Rendering\ViewTrait;
 
 class ItemDetail implements DataViewComponentInterface, ArrayDataAggregateInterface
@@ -27,45 +28,34 @@ class ItemDetail implements DataViewComponentInterface, ArrayDataAggregateInterf
     use ViewTrait;
     use ArrayDataAggregateTrait;
 
+
+
     /**
-     * Constructor.
+     * ItemDetail constructor.
      *
-     * @param mixed $data data to render
+     * @param $item_id
      */
     public function __construct( $data = null )
     {
         $this->setData( $data );
+
     }
 
-    /**
-     * Renders data.
-     *
-     * @return string
-     */
     public function render()
     {
-        $data = $this->getData();
-        return $this->show( $data );
-    }
+        $item_id =$this->getData()->id;
 
+        $depots = Item::find( $item_id )->depots;
 
-    public function show( $data )
-    {
-
-
-        $pivot_id = $data->pivot->id;
-        $depotItem = DepotItem::find( $pivot_id );
-        $movements = $depotItem->movements;
-
-        $provider = new ArrayDataProvider( $movements );
+        $provider = new ArrayDataProvider( $depots );
         $columns = [
-            new TableCaption( 'Movement Details: ' . $data->name ),
-            ( new Column( 'qta' ) ),
-            ( new Column( 'reason' ) )->setValueFormatter( function ( $val, $row ) {
-                return  "<strong>" .  Helpers::ComboReasons($val) . "</strong><br>"
-
-                    . $row->user->name . "<br>"
-                    . "<small>" . $row->created_at->format( 'd/m/Y H:i:s' )  . "</small>";
+            new TableCaption( 'Item Details:' ),
+            ( new Column( 'name' )),
+            ( new Column( 'group.name' )),
+            ( new Column( 'pivot.qta_depot' ,'QTA')),
+        //    ( new Column( 'pivot.qta_ini' ,'QTA INI')),
+            ( new Column( 'updated_at','update' ) )->setValueFormatter( function ( $val ) {
+                return $val->format('d/m/Y H:i:s');
 
             } ),
 
@@ -73,11 +63,10 @@ class ItemDetail implements DataViewComponentInterface, ArrayDataAggregateInterf
 
         $grid = new Grid( $provider, $columns );
         BootstrapStyling::applyTo( $grid );
-        $grid->getColumn( 'qta' )->getDataCell()->setAttribute( 'class', 'fit-cell text-right' );
-
-
+        $grid->getColumn( 'pivot.qta_depot' )->getDataCell()->setAttribute( 'class', 'fit-cell text-right' );
+   //     $grid->getColumn( 'pivot.qta_ini' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
         return $grid;
-
     }
+
 
 }

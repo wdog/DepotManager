@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Utils\Helpers;
+use App\Utils\ItemDetail;
 use Illuminate\Support\Facades\Gate;
 
 use App\Item;
@@ -56,7 +57,7 @@ class ItemController extends Controller
 
                 new Column( 'code' ),
                 new Column( 'name' ),
-                ( new Column( 'actions','' ) )
+                ( new Column( 'actions', '' ) )
                     ->setValueCalculator( function ( $row ) {
                         $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
                         $delete = link_to_route( 'items.destroy', '', $row->id, [
@@ -68,6 +69,7 @@ class ItemController extends Controller
                         return $edit . " " . $delete;
                     } ),
 
+                new DetailsRow( new ItemDetail() ),
                 new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
                 new PaginationControl( $input->option( 'page', 1 ), 5 ),
 

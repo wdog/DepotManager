@@ -46,8 +46,8 @@ class GroupsController extends Controller
 
             ( new Column( 'actions', '' ) )
                 ->setValueCalculator( function ( $row ) {
-                    $edit = link_to_route( 'admin.users.edit', '', [ $row->id ], [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
-                    $delete = link_to_route( 'admin.users.destroy', '', $row->id, [
+                    $edit = link_to_route( 'admin.groups.edit', '', [ $row->id ], [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
+                    $delete = link_to_route( 'admin.groups.destroy', '', $row->id, [
                         'class'        => 'btn btn-sm btn-danger fa fa-trash',
                         'data-method'  => "delete",
                         'data-confirm' => "Are you sure?",

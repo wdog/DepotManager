@@ -12,9 +12,7 @@ use App\Http\Requests\UpdateDepotRequest;
 
 use App\Item;
 use App\Movement;
-use App\Utils\ColumnActions;
-use App\Utils\CustomRow;
-use App\Utils\ItemDetail;
+use App\Utils\DepotItemDetail;
 use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Support\Facades\Auth;
@@ -24,9 +22,6 @@ use ViewComponents\Grids\Component\DetailsRow;
 use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
 use ViewComponents\ViewComponents\Component\Control\PaginationControl;
-use ViewComponents\ViewComponents\Component\Html\Tag;
-use ViewComponents\ViewComponents\Component\ManagedList\RecordView;
-use ViewComponents\ViewComponents\Component\Part;
 use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
 use ViewComponents\ViewComponents\Data\ArrayDataProvider;
 use ViewComponents\ViewComponents\Input\InputSource;
@@ -169,7 +164,7 @@ class DepotController extends Controller
 
                 } ),
 
-            new DetailsRow( new ItemDetail() ),
+            new DetailsRow( new DepotItemDetail() ),
         ];
 
         $grid = new Grid( $provider, $columns );
