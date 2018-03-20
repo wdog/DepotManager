@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Depot;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        $depots = Depot::list()->get();
+
+        return view('home', compact('depots'));
     }
 }

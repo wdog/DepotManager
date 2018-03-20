@@ -8,11 +8,12 @@
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
 
-<!-- Tell the browser to be responsive to screen width -->
+<!-- responsive to screen width -->
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="/css/app.css">
-<link rel="stylesheet" href="/css/style.css">
-
-
 <script src="/js/app.js"></script>
+<!-- Custom -->
+<link rel="stylesheet" href="/css/app.css">
+<!-- System -->
+<link rel="stylesheet" href="/css/custom.css">
+
+

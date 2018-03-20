@@ -61,18 +61,20 @@ class ItemDetail implements DataViewComponentInterface, ArrayDataAggregateInterf
         $columns = [
             new TableCaption( 'Movement Details: ' . $data->name ),
             ( new Column( 'qta' ) ),
-            ( new Column( 'reason' ) ),
-            ( new Column( 'user.name' ) ),
-            ( new Column( 'created_at', 'Dt' ) )
-                ->setValueFormatter( function ( $val ) {
-                    return $val->format( 'd-m-Y H:i:s' );
-                } ),
+            ( new Column( 'reason' ) )->setValueFormatter( function ( $val, $row ) {
+                return  "<strong>" .  Helpers::ComboReasons($val) . "</strong><br>"
+
+                    . $row->user->name . "<br>"
+                    . "<small>" . $row->created_at->format( 'd/m/Y H:i:s' )  . "</small>";
+
+            } ),
+
         ];
 
         $grid = new Grid( $provider, $columns );
         BootstrapStyling::applyTo( $grid );
         $grid->getColumn( 'qta' )->getDataCell()->setAttribute( 'class', 'fit-cell text-right' );
-        $grid->getColumn( 'created_at' )->getDataCell()->setAttribute( 'class', 'text-right' );
+
 
         return $grid;
 

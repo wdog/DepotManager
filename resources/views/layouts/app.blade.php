@@ -8,8 +8,6 @@
 @include('partials.topbar')
 
 
-
-
 {{--
 @if ($errors->count() > 0)
     <div class="alert alert-danger">

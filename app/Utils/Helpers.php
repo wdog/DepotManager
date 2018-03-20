@@ -2,6 +2,8 @@
 
 namespace App\Utils;
 
+use Illuminate\Support\Facades\Auth;
+
 /**
  * Class Helpers
  *
@@ -33,12 +35,24 @@ class Helpers
     /**
      * @return array
      */
-    public static function ComboReasons()
+    public static function ComboReasons( $val = null )
     {
-        return [
+        $data = [
             ''  => '---',
             'I' => 'INFRASTRUTTURA',
             'C' => 'ALLACCIO CLIENTI',
+
         ];
+
+
+        $data[ 'L' ] = 'DEPOT LOAD';
+        $data[ 'M' ] = 'MOVE INTRA DEPOT';
+
+
+        if ( $val ) {
+            return $data[ $val ];
+        }
+
+        return $data;
     }
 }
