@@ -21,8 +21,12 @@ class DepotItem extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'qta_ini', 'qta_depot', 'serial',
-
+        'id',
+        'qta_ini',
+        'qta_depot',
+        'serial',
+        'item_id',
+        'depot_id',
     ];
 
 
@@ -33,7 +37,6 @@ class DepotItem extends Model
     {
         return $this->hasMany( Movement::class );
     }
-
 
 
     /**

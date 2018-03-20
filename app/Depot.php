@@ -66,4 +66,11 @@ class Depot extends Model
     }
 
 
+    /**
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return $this->name . " - " . $this->group->name;
+    }
 }

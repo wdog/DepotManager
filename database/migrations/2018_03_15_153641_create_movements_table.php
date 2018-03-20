@@ -26,9 +26,12 @@ class CreateMovementsTable extends Migration
 
             $table->integer( 'depot_item_id' )->unsigned()->nullable();
             $table->foreign( 'depot_item_id' )->references( 'id' )->on( 'depot_item' )->onDelete( 'cascade' );
-            $table->integer( 'qta' )->unsigned()->nullable();
+            $table->integer( 'qta' )->nullable();
             $table->string( 'reason' )->nullable();
             $table->text( 'info' )->nullable();
+
+            $table->integer( 'movement_id' )->unsigned()->nullable();
+            $table->foreign( 'movement_id' )->references( 'id' )->on( 'movements' )->onDelete( 'cascade' );
             $table->timestamps();
         } );
     }

@@ -43,9 +43,7 @@ class AppServiceProvider extends ServiceProvider
             } );
         } );
 
-
-
-        Services::renderer()->getFinder()->registerPath( dirname( __DIR__ ) . '/../resources/views/vendor/grid-bootstrap/', true);
+        Services::renderer()->getFinder()->registerPath( dirname( __DIR__ ) . '/../resources/views/vendor/grid-bootstrap/views', true);
         //dd ( Services::renderer()->getFinder());
     }
 }

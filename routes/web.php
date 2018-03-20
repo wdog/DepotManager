@@ -44,9 +44,10 @@ Route::group( [ 'middleware' => [ 'auth' ], ], function () {
     // unload item from depot
     Route::get( 'depots/{depot}/item/{item}/unload', [ 'uses' => 'DepotController@unloadItem', 'as' => 'depots.unload_item' ] );
     Route::post( 'depots/{depot}/item/{item}/unload', [ 'uses' => 'DepotController@createMovementItem', 'as' => 'depots.movement_item' ] );
+
     Route::resource( 'depots', 'DepotController' );
 
-    // movements
+    // movements detail of item in depot
     Route::get( 'movements/{depot_item}', [ 'uses' => 'MovementController@show', 'as' => 'movements.show' ] );
 
 } );

@@ -18,7 +18,7 @@ class Movement extends Model
         'user_id',
         'qta',
         'info',
-
+        'movement_id',
     ];
 
     /**

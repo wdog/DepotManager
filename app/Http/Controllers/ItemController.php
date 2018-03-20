@@ -58,9 +58,9 @@ class ItemController extends Controller
                 new Column( 'name' ),
                 ( new Column( 'actions','' ) )
                     ->setValueCalculator( function ( $row ) {
-                        $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
+                        $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
                         $delete = link_to_route( 'items.destroy', '', $row->id, [
-                            'class'        => 'btn btn-xs btn-danger fa fa-trash',
+                            'class'        => 'btn btn-sm btn-danger fa fa-trash',
                             'data-method'  => "delete",
                             'data-confirm' => "Are you sure?",
 

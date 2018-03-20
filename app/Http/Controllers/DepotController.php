@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Depot;
+use App\DepotItem;
 use App\Group;
 use App\Http\Requests\StoreDepotRequest;
 use App\Http\Requests\StoreItemDepotRequest;
@@ -11,6 +12,8 @@ use App\Http\Requests\UpdateDepotRequest;
 
 use App\Item;
 use App\Movement;
+use App\Utils\ColumnActions;
+use App\Utils\CustomRow;
 use App\Utils\ItemDetail;
 use Illuminate\Support\Facades\Gate;
 
@@ -21,6 +24,9 @@ use ViewComponents\Grids\Component\DetailsRow;
 use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
 use ViewComponents\ViewComponents\Component\Control\PaginationControl;
+use ViewComponents\ViewComponents\Component\Html\Tag;
+use ViewComponents\ViewComponents\Component\ManagedList\RecordView;
+use ViewComponents\ViewComponents\Component\Part;
 use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
 use ViewComponents\ViewComponents\Data\ArrayDataProvider;
 use ViewComponents\ViewComponents\Input\InputSource;
@@ -41,6 +47,7 @@ class DepotController extends Controller
         $input = new InputSource( $_GET );
         $grid = new Grid(
             $provider, [
+
                 new Column( 'name' ),
                 new Column( 'group.name', 'Group' ),
                 ( new Column( 'actions', '' ) )
@@ -50,19 +57,19 @@ class DepotController extends Controller
                         $delete = '';
                         // only admin can update depot
                         if ( Auth::user()->can( 'update', Depot::class ) ) {
-                            $edit = link_to_route( 'depots.edit', '', $row->id, [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
+                            $edit = link_to_route( 'depots.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
                         }
                         // only admin can delete depot
                         if ( Auth::user()->can( 'delete', Depot::class ) ) {
                             $delete = link_to_route( 'depots.destroy', '', $row->id, [
-                                'class'        => 'btn btn-danger btn-xs fa fa-trash',
+                                'class'        => 'btn btn-danger btn-sm fa fa-trash',
                                 'data-method'  => "delete",
                                 'data-confirm' => "Are you sure?",
 
                             ] );
                         }
                         // view button
-                        $view = link_to_route( 'depots.show', '', $row->id, [ 'class' => 'btn btn-xs btn-success fa fa-eye' ] );
+                        $view = link_to_route( 'depots.show', '', $row->id, [ 'class' => 'btn btn-sm btn-success fa fa-eye' ] );
                         $buttons = $view . " " . $edit . " " . $delete;
                         return $buttons;
                     } ),
@@ -71,6 +78,7 @@ class DepotController extends Controller
                 new PaginationControl( $input->option( 'page', 1 ), 5 ),
             ]
         );
+
         BootstrapStyling::applyTo( $grid );
         $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
         $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
@@ -150,14 +158,14 @@ class DepotController extends Controller
         $columns = [
             new Column( 'code' ),
             new Column( 'pivot.serial', 'Serial' ),
-            ( new Column( 'pivot.qta_depot', 'Qta' ) )
-                ->setValueCalculator( function ( $row ) {
-                    return $row->pivot->qta_depot . " <small>" . $row->um . "</small>";
-                } ),
+            ( new Column( 'pivot.qta_ini', 'Qta' ) )// CHANGE XXX
+            ->setValueCalculator( function ( $row ) {
+                return $row->pivot->qta_depot . " <small>" . $row->um . "</small>";
+            } ),
 
             ( new Column( 'actions', '' ) )
                 ->setValueCalculator( function ( $row ) use ( $depot ) {
-                    return link_to_route( 'depots.unload_item', '', [ $depot, $row->pivot->id ], [ 'class' => 'btn btn-xs btn-info fa fa-pencil' ] );
+                    return link_to_route( 'depots.unload_item', '', [ $depot, $row->pivot->id ], [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
 
                 } ),
 
@@ -165,10 +173,12 @@ class DepotController extends Controller
         ];
 
         $grid = new Grid( $provider, $columns );
-        BootstrapStyling::applyTo( $grid );
 
-        $grid->getColumn( 'pivot.qta_depot' )->getDataCell()->setAttribute( 'class', 'text-right' );
+
+        $grid->getColumn( 'pivot.qta_ini' )->getDataCell()->setAttribute( 'class', 'text-right' );
         $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
+        // $grid->setRecordView( new CustomRow() );
+        BootstrapStyling::applyTo( $grid );
         return view( 'depots.view', compact( 'depot', 'grid' ) );
     }
 
@@ -201,6 +211,8 @@ class DepotController extends Controller
 
 
     /**
+     * ADMIN LOADS AN ITEM
+     *
      * @param StoreItemDepotRequest $request
      * @param Depot $depot
      * @return string
@@ -210,17 +222,20 @@ class DepotController extends Controller
         if ( !Gate::allows( 'depots_manage' ) ) {
             return abort( 401 );
         }
-
-        $depot->items()->attach( $request->item_id, [
+        $depotItem = DepotItem::create( [
+            'item_id'   => $request->item_id,
+            'depot_id'  => $depot->id,
             'qta_ini'   => $request->qta_ini,
             'qta_depot' => $request->qta_ini,
             'serial'    => $request->serial,
         ] );
-
+        $this->createMovement( $request->qta_ini, "L", $depotItem->id, "SYSTEM LOAD" );
         return redirect()->route( 'depots.show', $depot );
     }
 
     /**
+     *  FORM - SOMEONE UNLOAD ITEMS FROM DEPOT
+     *
      * @param Depot $depot
      * @param $pivot_id
      * @internal param Item $item
@@ -230,12 +245,15 @@ class DepotController extends Controller
     {
         $item = $depot->items()->where( 'depot_item.id', $pivot_id )->first();
 
-        return view( 'depots.items.unload', compact( 'depot', 'item' ) );
+        $depots = Depot::where( 'id', '!=', $depot->id )->get()->pluck( 'full_name', 'id' );
+        return view( 'depots.items.unload', compact( 'depot', 'item', 'depots' ) );
 
     }
 
-
     /**
+     *
+     * SOMEONE UNLOAD ITEMS FROM DEPOT
+     *
      * @param StoreMovementRequest $request
      * @param Depot $depot
      * @param $pivot_id
@@ -246,25 +264,74 @@ class DepotController extends Controller
     {
         $this->authorize( 'view', $depot );
 
+
         $item = $depot->items()->where( 'depot_item.id', $pivot_id )->first();
 
         if ( $item->pivot->qta_depot - $request->qta >= 0 ) {
+
+            if ( $request->depot_id ) {
+                $reason = "M";
+                $info = "TRANS DEPOT";
+            } else {
+                $reason = $request->reason;
+                $info = "UNLOAD ITEM";
+            }
+
+
+            // unload item from source depot
             $item->pivot->decrement( 'qta_depot', $request->qta );
-            // create movement
-            $mov = new Movement();
-            $mov->user_id = Auth::id();
-            $mov->group_id = Auth::user()->group_id;
-            $mov->qta = $request->qta;
-            $mov->reason = $request->reason;
-            $mov->depot_item_id = $pivot_id;
-            $mov->info = "Unload";
-            $mov->save();
+            // create movement unload
+            $movement = $this->createMovement( -1 * $request->qta, $reason, $pivot_id, $info );
+
+
+            // create movement load id a destination depot is defined
+            if ( $request->depot_id ) {
+                // find old item
+                $item = DepotItem::find( $pivot_id );
+                // find new depot
+                $destDepot = Depot::find( $request->depot_id );
+                // create load into new depot
+                $depotItem = DepotItem::create(
+                    [
+                        'item_id'   => $item->item_id,
+                        'depot_id'  => $destDepot->id,
+                        'qta_ini'   => $request->qta,
+                        'qta_depot' => $request->qta,
+                        'serial'    => $item->serial,
+                    ]
+                );
+                // create movement in new depot
+                $this->createMovement( $request->qta, $reason, $depotItem->id, $info, $movement->id );
+            }
+
         } else {
             $request->session()->flash( 'error', 'too many items to unload' );
-
         }
 
         return redirect()->route( 'depots.show', $depot );
 
+    }
+
+
+    /**
+     * @param $qta
+     * @param $reason
+     * @param $pivot_id
+     * @param $info
+     * @return Movement
+     */
+    public function createMovement( $qta, $reason, $pivot_id, $info, $movement_id = null )
+    {
+        $mov = new Movement();
+        $mov->user_id = Auth::id();
+        $mov->group_id = Auth::user()->group_id;
+        $mov->qta = $qta;
+        $mov->reason = $reason;
+        $mov->depot_item_id = $pivot_id;
+        $mov->info = $info;
+        $mov->movement_id = $movement_id;
+        $mov->save();
+
+        return $mov;
     }
 }
