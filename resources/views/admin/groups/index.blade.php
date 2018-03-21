@@ -2,9 +2,9 @@
 @extends('layouts.app')
 
 @section('content')
-	<div class="card card-default">
-        <div class="card-header">
-                <h4 class="pull-left">Groups</h4>
+	<div class="card">
+        <div class="card-header bg-dark text-white">
+                <div class="pull-left">@lang('global.groups.title')</div>
 	        @can('users_manage')
 		        <a href="{{ route('admin.groups.create') }}" class="pull-right btn btn-sm btn-success">@lang('global.app_add_new')</a>
 	        @endcan

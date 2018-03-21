@@ -43,8 +43,8 @@ class DepotController extends Controller
         $grid = new Grid(
             $provider, [
 
-                new Column( 'name' ),
-                new Column( 'group.name', 'Group' ),
+                new Column( 'name', trans( 'global.name' ) ),
+                new Column( 'group.name', trans( 'global.groups.title' ) ),
                 ( new Column( 'actions', '' ) )
                     ->setValueCalculator( function ( $row ) {
 
@@ -151,9 +151,9 @@ class DepotController extends Controller
         $provider = new ArrayDataProvider( $depot->itemsActive );
 
         $columns = [
-            new Column( 'code' ),
-            new Column( 'pivot.serial', 'Serial' ),
-            ( new Column( 'pivot.qta_ini', 'Qta' ) )// CHANGE XXX
+            new Column( 'code', trans( 'global.code' ) ),
+            new Column( 'pivot.serial', trans( 'global.serial' ) ),
+            ( new Column( 'pivot.qta_ini', 'Qta', trans( 'global.qta' ) ) )// CHANGE XXX
             ->setValueCalculator( function ( $row ) {
                 return $row->pivot->qta_depot . " <small>" . $row->um . "</small>";
             } ),

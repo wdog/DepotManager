@@ -5,15 +5,15 @@
 	{!! Form::open(['method' => 'POST', 'route' => ['depots.store_item', $depot ]]) !!}
 	
 	<div class="card">
-		<div class="card-header">
+		<div class="card-header bg-dark text-white">
 			Load Depot: {{ $depot->name }}
 		</div>
 		
 		<div class="card-body">
 		
 			   <div class="row">
-                <div class="col-xs-4 offset-sm-4 form-group">
-                    {!! Form::label('item_id', 'Item*', ['class' => 'control-label']) !!}
+                <div class="col-md-4 offset-md-4 form-group">
+                    {!! Form::label('item_id', trans('global.items.title'). '*', ['class' => 'control-label']) !!}
 	                {!! Form::select('item_id', $items, old('item_id'), ['class' => 'select2 form-select', 'placeholder' => '', 'required' => '']) !!}
 	                <p class="help-block"></p>
 	                @if($errors->has('item_id'))
@@ -25,8 +25,8 @@
             </div>
 			
 			<div class="row">
-                <div class="col-xs-4 offset-sm-4 form-group">
-                    {!! Form::label('qta_ini', 'Qta*', ['class' => 'control-label']) !!}
+                <div class="col-md-4 offset-md-4 form-group">
+                    {!! Form::label('qta_ini', trans('global.qta'). '*', ['class' => 'control-label']) !!}
 	                {!! Form::number('qta_ini', old('qta_ini'), ['class' => 'form-control', 'placeholder' => '', 'required' => '']) !!}
 	                <p class="help-block"></p>
 	                @if($errors->has('qta_ini'))
@@ -39,8 +39,8 @@
 			
 			
 				<div class="row">
-                <div class="col-xs-4 offset-sm-4 form-group">
-                    {!! Form::label('serial', 'Serial*', ['class' => 'control-label']) !!}
+                <div class="col-md-4 offset-md-4 form-group">
+                    {!! Form::label('serial', trans('global.serial') .'*', ['class' => 'control-label']) !!}
 	                {!! Form::text('serial', old('serial'), ['class' => 'form-control', 'placeholder' => '', 'required' => '']) !!}
 	                <p class="help-block">@lang('global.app_help_empty')</p>
 	                @if($errors->has('serial'))
@@ -53,8 +53,8 @@
 		</div>
 	
 		<div class="card-footer text-muted">
-		  {!! Form::submit(trans('global.app_load'), ['class' => 'btn btn-danger']) !!}
-	
+			{!! Form::submit(trans('global.app_load'), ['class' => 'btn btn-sm btn-danger']) !!}
+			{!! link_to_route('depots.show',trans('global.app_back_to_list'),$depot,['class'=> 'btn btn-sm btn-info pull-right']) !!}
 		</div>
 	</div>
 	{!! Form::close() !!}
@@ -63,13 +63,6 @@
 
 @section('javascript')
 	<script>
-		/*
-		 $(function () {
-		 $("select[name=item_id]").on("select2:selecting", function (e) {
-		 var value = $(e.currentTarget).find("option:selected").val();
-		 console.log(value);
-		 });
-		 });
-		 */
+	
 	</script>
 @endsection

@@ -35,15 +35,25 @@ class AppServiceProvider extends ServiceProvider
     {
 
         Bootstrap::registerServiceProvider( function ( ServiceContainer $container ) {
+            // CUSTOM STYLE
+            $container->extend( ServiceId::BOOTSTRAP_STYLING_CONFIG, function () {
+                return include app_path() . "/Config/twitter_bootstrap.php";
+            } );
+            // CUSTOM TEMPLATES
             $container->extend( ServiceId::RESOURCE_MANAGER, function ( ResourceManager $resourceManager ) {
                 $resourceManager
                     ->ignoreCss( [ 'bootstrap' ] )
                     ->ignoreJs( [ 'jquery', 'bootstrap' ] );
                 return $resourceManager;
             } );
+
+
         } );
 
-        Services::renderer()->getFinder()->registerPath( dirname( __DIR__ ) . '/../resources/views/vendor/grid-bootstrap/views', true);
+
+        Services::renderer()->getFinder()->registerPath( dirname( __DIR__ ) . '/../resources/views/vendor/grid-bootstrap/views', true );
         //dd ( Services::renderer()->getFinder());
+
+
     }
 }

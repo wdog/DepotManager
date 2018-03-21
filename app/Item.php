@@ -57,4 +57,11 @@ class Item extends Model
     {
         return $this->code . " - " . $this->name . " - " . $this->um;
     }
+
+    public function available(  )
+    {
+        //return $this->depots;
+        return $this->depots()->sum('qta_depot');
+
+    }
 }

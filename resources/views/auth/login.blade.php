@@ -2,9 +2,11 @@
 
 @section('content')
     
-    <div class="col-sm-4 offset-md-4">
+    <div class="col-md-4 offset-md-4 ">
         <div class="card rounded">
-            <div class="card-header"><h3>{{ config('app.name') }}</h3></div>
+            <div class="card-header bg-dark text-white">
+                <h3>{{ config('app.name') }}</h3>
+            </div>
             <div class="card-body">
                 @if (count($errors) > 0)
                     <div class="alert alert-danger">

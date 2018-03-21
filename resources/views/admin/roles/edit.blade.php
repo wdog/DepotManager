@@ -5,8 +5,8 @@
 	{!! Form::model($role, ['method' => 'PUT', 'route' => ['admin.roles.update', $role->id]]) !!}
 	
 	<div class="card">
-        <div class="card-header">
-            @lang('global.app_edit') Roles
+        <div class="card-header bg-dark text-white">
+            @lang('global.app_edit') @lang('global.roles.title')
         </div>
         
         <div class="card-body">
@@ -37,7 +37,8 @@
         </div>
 		
 		<div class="card-footer">
-			  {!! Form::submit(trans('global.app_update'), ['class' => 'btn btn-danger']) !!}
+			{!! Form::submit(trans('global.app_update'), ['class' => 'btn  btn-sm btn-danger']) !!}
+			{!! link_to_route('admin.roles.index',trans('global.app_back_to_list'),null,['class'=> 'btn btn-sm btn-info pull-right']) !!}
 		</div>
     </div>
 	

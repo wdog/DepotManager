@@ -9,7 +9,10 @@
 						<div class="card-body" style="	position: relative;">
 							<div class="card-title">
 								<a href="{{ route('depots.show', $depot) }}" class="dashboard d-block">
-									<h4>{{ $depot->name }}</h4>
+									<h4>
+										{{ $depot->name }}
+										<i class="fa fa-sign-in" aria-hidden="true"></i>
+									</h4>
 									<p class="card-text"> {{ $depot->group->name }}</p>
 								</a>
 							</div>

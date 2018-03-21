@@ -3,8 +3,8 @@
 
 @section('content')
     <div class="card card-default">
-        <div class="card-header">
-                <h4 class="pull-left">Users</h4>
+        <div class="card-header bg-dark text-white">
+                <div class="pull-left">@lang('global.users.title')</div>
             @can('users_manage')
                 <a href="{{ route('admin.users.create') }}" class="pull-right btn btn-sm btn-success">@lang('global.app_add_new')</a>
             @endcan

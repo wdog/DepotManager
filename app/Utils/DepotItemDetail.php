@@ -60,12 +60,12 @@ class DepotItemDetail implements DataViewComponentInterface, ArrayDataAggregateI
         $provider = new ArrayDataProvider( $movements );
         $columns = [
             new TableCaption( 'Movement Details: ' . $data->name ),
-            ( new Column( 'qta' ) ),
-            ( new Column( 'reason' ) )->setValueFormatter( function ( $val, $row ) {
-                return  "<strong>" .  Helpers::ComboReasons($val) . "</strong><br>"
+            ( new Column( 'qta', trans( 'global.qta' ) ) ),
+            ( new Column( 'reason', trans( 'global.reason' ) ) )->setValueFormatter( function ( $val, $row ) {
+                return "<strong>" . Helpers::ComboReasons( $val, true ) . "</strong><br>"
 
                     . $row->user->name . "<br>"
-                    . "<small>" . $row->created_at->format( 'd/m/Y H:i:s' )  . "</small>";
+                    . "<small>" . $row->created_at->format( 'd/m/Y H:i:s' ) . "</small>";
 
             } ),
 

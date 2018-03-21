@@ -11,20 +11,22 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Item;
 use Illuminate\Http\Request;
+use Psy\Util\Json;
+use stdClass;
 use ViewComponents\Eloquent\EloquentDataProvider;
-use ViewComponents\Grids\Component\AjaxDetailsRow;
 use ViewComponents\Grids\Component\Column;
+use ViewComponents\Grids\Component\CsvExport;
 use ViewComponents\Grids\Component\DetailsRow;
 use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Component\Control\FilterControl;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
 use ViewComponents\ViewComponents\Component\Control\PaginationControl;
-use ViewComponents\ViewComponents\Component\Control\SelectFilterControl;
 use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
 use ViewComponents\ViewComponents\Data\ArrayDataProvider;
 use ViewComponents\ViewComponents\Data\Operation\FilterOperation;
 use ViewComponents\ViewComponents\Input\InputOption;
 use ViewComponents\ViewComponents\Input\InputSource;
+
 
 /**
  * Class ItemController
@@ -55,8 +57,11 @@ class ItemController extends Controller
                 //new SelectFilterControl( 'um', Helpers::ComboUnita(), $input->option( 'um' ) ),
 
 
-                new Column( 'code' ),
-                new Column( 'name' ),
+                new Column( 'code', trans( 'global.code' ) ),
+                new Column( 'name', trans( 'global.name' ) ),
+                ( new Column( 'qta', trans( 'global.qta' ) ) )->setValueCalculator( function ( $row ) {
+                    return $row->available();
+                } ),
                 ( new Column( 'actions', '' ) )
                     ->setValueCalculator( function ( $row ) {
                         $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
@@ -73,11 +78,15 @@ class ItemController extends Controller
                 new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
                 new PaginationControl( $input->option( 'page', 1 ), 5 ),
 
-
+                new CsvExport( $input->option( 'csv' ) ),
             ] );
 
+        // grid style
         BootstrapStyling::applyTo( $grid );
+        // custom style
         $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
+        $grid->getColumn( 'qta' )->getDataCell()->setAttribute( 'class', 'fit-cell text-right' );
+        // filter on top of table
         $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
         $grid = $grid->render();
 

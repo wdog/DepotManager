@@ -4,8 +4,8 @@
 	{!! Form::open(['method' => 'POST', 'route' => ['admin.roles.store']]) !!}
 	
 	<div class="card">
-        <div class="card-header">
-            @lang('global.app_create') Roles
+        <div class="card-header bg-dark text-white">
+	        @lang('global.app_create') @lang('global.roles.title')
         </div>
         
         <div class="card-body">
@@ -37,6 +37,7 @@
 		
 		<div class="card-footer">
 			{!! Form::submit(trans('global.app_save'), ['class' => 'btn btn-danger']) !!}
+			{!! link_to_route('admin.roles.index',trans('global.app_back_to_list'),null,['class'=> 'btn btn-sm btn-info pull-right']) !!}
 		</div>
     </div>
 

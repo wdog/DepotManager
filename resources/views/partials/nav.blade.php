@@ -10,11 +10,12 @@
         
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
-                @can('users_manage')
-                    <li class="nav-item dropdown">
+                {{--USER GROUP ROLES --}}
+	            @can('users_manage')
+		            <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-users"></i>
-                            @lang('global.user-management.title')
+	                        @lang('global.management.title')
                         </a>
                         
                         <div class="dropdown-menu">
@@ -49,37 +50,56 @@
                             </a>
                         </div>
                     </li>
-                @endcan
-                <li class="nav-item {{ $request->segment(1) == 'depots' ? 'active' : '' }}">
+	            @endcan
+	
+	            {{--DEPOTS --}}
+	            <li class="nav-item {{ $request->segment(1) == 'depots' ? 'active' : '' }}">
                     <a class='nav-link' href="{{ route('depots.index') }}">
                         <i class="fa fa-building"></i>
-                        <span class="title">Depots</span>
+                        <span class="title">@lang('global.depots.title')</span>
                     </a>
                 </li>
-                @can('items_manage')
-                    <li class="nav-item {{ $request->segment(1) == 'items' ? 'active' : '' }}">
+	            {{--MANAGE ITEMS--}}
+	            @can('items_manage')
+		            <li class="nav-item {{ $request->segment(1) == 'items' ? 'active' : '' }}">
                         <a class='nav-link' href="{{ route('items.index') }}">
                             <i class="fa fa-bookmark"></i>
-                            <span class="title">Items</span>
+                            <span class="title">@lang('global.items.title')</span>
                         </a>
                     </li>
-                @endcan
+	            @endcan
                 
         </ul>
         
         
         <div class="mt-2 mt-md-0">
             <ul class="navbar-nav">
+                
+              
+                 <li class="nav-item dropdown">
+                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                         <i class="fa fa-language"></i> {{ trans('global.app_lang') }}
+	                     
+                     </a>
+                     
+                     <div class="dropdown-menu dropdown-menu-right">
+                         <a class="dropdown-item" href="/lang/it"><span class="title"> IT</span></a>
+                         <a class="dropdown-item" href="/lang/en"><span class="title"> EN</span></a>
+                         <a class="dropdown-item" href="/lang/pl"><span class="title"> PL</span></a>
+                     </div>
+                 </li>
+        
+                
                  <li class="nav-item dropdown">
                      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                          <i class="fa fa-user"></i>
-                         {{ Auth::user()->name }}
+	                     {{ Auth::user()->name }}
                      </a>
                         
                      <div class="dropdown-menu dropdown-menu-right">
                          <a class="dropdown-item" href="{{ route('auth.change_password') }}">
                             <i class="fa fa-key"></i>
-                                <span class="title">Change password</span>
+                                <span class="title">@lang('global.app_change_password')</span>
                          </a>
                      
                          <a class="dropdown-item" href="#logout" onclick="$('#logout').submit();">

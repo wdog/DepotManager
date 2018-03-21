@@ -35,19 +35,19 @@ class Helpers
     /**
      * @return array
      */
-    public static function ComboReasons( $val = null )
+    public static function ComboReasons( $val = null, $render = false )
     {
         $data = [
             ''  => '---',
             'I' => 'INFRASTRUTTURA',
             'C' => 'ALLACCIO CLIENTI',
-
+            'V' => 'VARIE',
         ];
 
-
-        $data[ 'L' ] = 'DEPOT LOAD';
-        $data[ 'M' ] = 'MOVE INTRA DEPOT';
-
+        if ( $render ) {
+            $data[ 'L' ] = 'DEPOT LOAD';
+            $data[ 'M' ] = 'MOVE INTRA DEPOT';
+        }
 
         if ( $val ) {
             return $data[ $val ];

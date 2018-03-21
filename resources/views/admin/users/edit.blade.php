@@ -5,8 +5,8 @@
 	{!! Form::model($user, ['method' => 'PUT', 'route' => ['admin.users.update', $user->id]]) !!}
 	
 	<div class="card">
-        <div class="card-header">
-            @lang('global.app_edit') Users
+        <div class="card-header bg-dark text-white">
+            @lang('global.app_edit') @lang('global.users.title')
         </div>
         <div class="card-body">
             <div class="row">
@@ -71,7 +71,8 @@
             </div>
         </div>
 		<div class="card-footer">
-			  {!! Form::submit(trans('global.app_update'), ['class' => 'btn btn-danger']) !!}
+			{!! Form::submit(trans('global.app_update'), ['class' => 'btn btn-sm btn-danger']) !!}
+			{!! link_to_route('admin.users.index',trans('global.app_back_to_list'),null,['class'=> 'btn btn-sm btn-info pull-right']) !!}
 		</div>
     </div>
 	

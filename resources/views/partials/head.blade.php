@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <title>
-    {{ trans('global.global_title') }}
+   {{ trans('global.global_title') }}
 </title>
 
 <meta http-equiv="X-UA-Compatible" content="IE=edge">

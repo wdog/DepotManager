@@ -1,0 +1,24 @@
+/* CARD BODY FIT */
+.card-body {
+  padding : 5px !important;
+}
+
+/* HOME PAGE */
+.dashboard {
+  color       : #000000 !important;
+  text-shadow : 0px 0px 5px #666666 !important;
+}
+
+.dashboard:hover {
+  color           : #FF0000 !important;
+  text-shadow     : 0px 0px 3px #F0AD4E !important;
+  text-decoration : none;
+  transition      : 0.2s;
+}
+
+/* TABLE FIT CONTENT */
+
+.fit-cell {
+  width       : 1%;
+  white-space : nowrap;
+}

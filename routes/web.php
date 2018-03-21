@@ -1,6 +1,9 @@
 <?php
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Request;
+
 Route::get( '/', function () {
-    return redirect( '/admin/home' );
+    return redirect( '/home' );
 } );
 
 // Authentication Routes...
@@ -20,26 +23,25 @@ $this->post( 'password/reset', 'Auth\ResetPasswordController@reset' )->name( 'au
 
 Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
 
-    Route::get( '/home', 'HomeController@index' );
     Route::resource( 'abilities', 'Admin\AbilitiesController' );
     Route::post( 'abilities_mass_destroy', [ 'uses' => 'Admin\AbilitiesController@massDestroy', 'as' => 'abilities.mass_destroy' ] );
-
     Route::resource( 'roles', 'Admin\RolesController' );
     Route::post( 'roles_mass_destroy', [ 'uses' => 'Admin\RolesController@massDestroy', 'as' => 'roles.mass_destroy' ] );
-
     Route::resource( 'groups', 'Admin\GroupsController' );
-
     Route::resource( 'users', 'Admin\UsersController' );
     Route::post( 'users_mass_destroy', [ 'uses' => 'Admin\UsersController@massDestroy', 'as' => 'users.mass_destroy' ] );
-
 } );
 
-// Depots
+//**********************************************************//
 Route::group( [ 'middleware' => [ 'auth' ], ], function () {
+    Route::get( '/home', [ 'uses' => 'HomeController@index', 'as' => 'home' ] );
+
+
+    // LANGUAGE
+    Route::get( 'lang/{locale}', 'HomeController@switchLocale' );
     // Add Items to Depot
     Route::get( 'depots/{depot}/item/add', [ 'uses' => 'DepotController@addItem', 'as' => 'depots.add_item' ] );
     Route::post( 'depots/{depot}/item', [ 'uses' => 'DepotController@storeItem', 'as' => 'depots.store_item' ] );
-
 
     // unload item from depot
     Route::get( 'depots/{depot}/item/{item}/unload', [ 'uses' => 'DepotController@unloadItem', 'as' => 'depots.unload_item' ] );
@@ -47,12 +49,5 @@ Route::group( [ 'middleware' => [ 'auth' ], ], function () {
 
     Route::resource( 'depots', 'DepotController' );
 
-    // movements detail of item in depot
-    Route::get( 'movements/{depot_item}', [ 'uses' => 'MovementController@show', 'as' => 'movements.show' ] );
-
-} );
-
-// Items
-Route::group( [ 'middleware' => [ 'auth' ] ], function () {
     Route::resource( 'items', 'ItemController' );
 } );
