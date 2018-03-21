@@ -57,9 +57,12 @@
 					<div class="card-text">
 					{{-- INFO --}}
 						<ul class="list-group ">
-							<li class="list-group-item list-group-item-info "><strong>Code: </strong> {{ $item->code }}</li>
-							<li class="list-group-item list-group-item-info"><strong>Serial: </strong>{{ $item->serial }}</li>
-							<li class="list-group-item list-group-item-info"><strong>Qta: </strong>{{ $item->pivot->qta_depot }}  {{ $item->um }}</li>
+							<li class="list-group-item list-group-item-info "><strong>@lang('global.code')
+										: </strong> {{ $item->code }}</li>
+							<li class="list-group-item list-group-item-info"><strong>@lang('global.serial')
+										: </strong>{{ $item->serial }}</li>
+							<li class="list-group-item list-group-item-info"><strong>@lang('global.qta')
+										: </strong>{{ $item->pivot->qta_depot }}  {{ $item->um }}</li>
 						</ul>
 					</div>
 	            </div>
