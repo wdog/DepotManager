@@ -47,7 +47,7 @@ class ItemController extends Controller
             return abort( 401 );
         }
 
-        $provider = new EloquentDataProvider( Item::class );
+        $provider = new EloquentDataProvider( Item::orderBy('name') );
         $input = new InputSource( $_GET );
         $grid = new Grid(
             $provider,
@@ -75,7 +75,7 @@ class ItemController extends Controller
                     } ),
 
                 new DetailsRow( new ItemDetail() ),
-                new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
+                new PageSizeSelectControl( $input->option( 'ps', 50 ), [ 50, 100, 500 ] ),
                 new PaginationControl( $input->option( 'page', 1 ), 5 ),
 
                 new CsvExport( $input->option( 'csv' ) ),
