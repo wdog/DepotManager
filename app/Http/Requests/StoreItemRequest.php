@@ -25,7 +25,7 @@ class StoreItemRequest extends FormRequest
     {
 
         return [
-            'code'     => 'required|unique:items,code',
+            'code'     => 'required|max:8|min:0|unique:items,code',
             'name'     => 'required',
             'um'       => 'required',
         ];

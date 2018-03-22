@@ -29,6 +29,8 @@ class UpdateItemRequest extends FormRequest
             'code' => [
                 'required',
                 Rule::unique( 'items' )->where( 'id', '<>', $id ),
+                'min:0',
+                'max:8'
             ],
             'name' => 'required',
             'um'   => 'required',
