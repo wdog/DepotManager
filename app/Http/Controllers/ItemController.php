@@ -56,7 +56,6 @@ class ItemController extends Controller
                 new FilterControl( 'code', FilterOperation::OPERATOR_STR_CONTAINS, $input->option( 'code' ) ),
                 //new SelectFilterControl( 'um', Helpers::ComboUnita(), $input->option( 'um' ) ),
 
-
                 new Column( 'code', trans( 'global.code' ) ),
                 new Column( 'name', trans( 'global.name' ) ),
                 ( new Column( 'qta', trans( 'global.qta' ) ) )->setValueCalculator( function ( $row ) {
