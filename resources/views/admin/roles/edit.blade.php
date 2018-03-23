@@ -38,7 +38,7 @@
 		
 		<div class="card-footer">
 			{!! Form::submit(trans('global.app_update'), ['class' => 'btn  btn-sm btn-danger']) !!}
-			{!! link_to_route('admin.roles.index',trans('global.app_back_to_list'),null,['class'=> 'btn btn-sm btn-info pull-right']) !!}
+			{!! link_to_route('admin.roles.index',trans('global.app_back_to_list'),null,['class'=> 'btn btn-sm btn-info']) !!}
 		</div>
     </div>
 	
