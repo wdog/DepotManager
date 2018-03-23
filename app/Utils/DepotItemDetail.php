@@ -21,6 +21,11 @@ use ViewComponents\ViewComponents\Data\ArrayDataAggregateTrait;
 use ViewComponents\ViewComponents\Data\ArrayDataProvider;
 use ViewComponents\ViewComponents\Rendering\ViewTrait;
 
+/**
+ * Class DepotItemDetail
+ *
+ * @package App\Utils
+ */
 class DepotItemDetail implements DataViewComponentInterface, ArrayDataAggregateInterface
 {
     use ChildNodeTrait;
@@ -49,14 +54,15 @@ class DepotItemDetail implements DataViewComponentInterface, ArrayDataAggregateI
     }
 
 
+    /**
+     * @param $data
+     * @return Grid
+     */
     public function show( $data )
     {
-
-
         $pivot_id = $data->pivot->id;
         $depotItem = DepotItem::find( $pivot_id );
         $movements = $depotItem->movements;
-
         $provider = new ArrayDataProvider( $movements );
         $columns = [
             new TableCaption( 'Movement Details: ' . $data->name ),

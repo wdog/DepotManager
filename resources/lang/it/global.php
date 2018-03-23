@@ -9,7 +9,10 @@ return [
     'management'          => [ 'title' => 'Impostazioni' ],
     'depots'              => [ 'title' => 'Depositi' ],
     'items'               => [ 'title' => 'Materiale' ],
-    'projects'            => [ 'title' => 'Progetti' ],
+    'projects'            => [
+        'title'  => 'Progetti',
+        'closed' => 'Terminato',
+    ],
     'code'                => 'Codice',
     'name'                => 'Nome',
     'qta'                 => 'Qta',

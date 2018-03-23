@@ -17,6 +17,15 @@ class Project extends Model
     protected $fillable = [
         'code',
         'name',
+        'closed',
+    ];
+
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'closed' => 'boolean',
     ];
 
     /**
@@ -33,6 +42,15 @@ class Project extends Model
     public function groups()
     {
         return $this->belongsToMany( Group::class );
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOpen( $query )
+    {
+        return $query->where( 'closed', false );
     }
 
 }

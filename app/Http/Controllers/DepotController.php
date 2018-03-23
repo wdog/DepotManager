@@ -234,10 +234,8 @@ class DepotController extends Controller
     public function unloadItem( Depot $depot, $pivot_id )
     {
         $item = $depot->items()->where( 'depot_item.id', $pivot_id )->first();
-
-
-        $projects = Auth::user()->group->projects->pluck( 'name', 'id' );
-
+        // only open projects
+        $projects = Auth::user()->group->projects()->open()->pluck( 'projects.name', 'projects.id' );
         $depots = Depot::where( 'id', '!=', $depot->id )->get()->pluck( 'full_name', 'id' );
         return view( 'depots.items.unload', compact( 'depot', 'item', 'depots', 'projects' ) );
 

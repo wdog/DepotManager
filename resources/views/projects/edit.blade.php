@@ -36,6 +36,20 @@
                 </div>
             </div>
 	        
+	            <div class="row">
+                <div class="col-xs-4 offset-sm-4 form-group">
+                    {!! Form::label('closed', trans('global.projects.closed').'*', ['class' => 'control-label']) !!}
+	                {!! Form::checkbox('closed',1, null) !!}
+	                <p class="help-block"></p>
+	                @if($errors->has('closed'))
+		                <p class="help-block">
+                            {{ $errors->first('closed') }}
+                        </p>
+	                @endif
+                </div>
+            </div>
+	        
+	        
         </div>
         
         <div class="card-footer">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Depot;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
@@ -27,7 +28,8 @@ class HomeController extends Controller
     public function index()
     {
         $depots = Depot::list()->get();
-        return view( 'home', compact( 'depots' ) );
+        $projects = Auth::user()->group->projects;
+        return view( 'home', compact( 'depots','projects' ) );
     }
 
 
