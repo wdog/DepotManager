@@ -47,20 +47,15 @@ class DepotController extends Controller
                 new Column( 'group.name', trans( 'global.groups.title' ) ),
                 ( new Column( 'actions', '' ) )
                     ->setValueCalculator( function ( $row ) {
-
                         $edit = '';
                         $delete = '';
-                        // only admin can update depot
-                        if ( Auth::user()->can( 'update', Depot::class ) ) {
+                        // ONLY ADMIN CAN MANGE
+                        if ( Auth::user()->can( 'depots_manage' ) ) {
                             $edit = link_to_route( 'depots.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
-                        }
-                        // only admin can delete depot
-                        if ( Auth::user()->can( 'delete', Depot::class ) ) {
                             $delete = link_to_route( 'depots.destroy', '', $row->id, [
                                 'class'        => 'btn btn-danger btn-sm fa fa-trash',
                                 'data-method'  => "delete",
                                 'data-confirm' => "Are you sure?",
-
                             ] );
                         }
                         // view button
@@ -69,7 +64,7 @@ class DepotController extends Controller
                         return $buttons;
                     } ),
 
-                new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
+                new PageSizeSelectControl( $input->option( 'ps', 10 ), [ 10, 100 ] ),
                 new PaginationControl( $input->option( 'page', 1 ), 5 ),
             ]
         );
@@ -240,8 +235,11 @@ class DepotController extends Controller
     {
         $item = $depot->items()->where( 'depot_item.id', $pivot_id )->first();
 
+
+        $projects = Auth::user()->group->projects->pluck( 'name', 'id' );
+
         $depots = Depot::where( 'id', '!=', $depot->id )->get()->pluck( 'full_name', 'id' );
-        return view( 'depots.items.unload', compact( 'depot', 'item', 'depots' ) );
+        return view( 'depots.items.unload', compact( 'depot', 'item', 'depots', 'projects' ) );
 
     }
 
@@ -258,12 +256,8 @@ class DepotController extends Controller
     public function createMovementItem( StoreMovementRequest $request, Depot $depot, $pivot_id )
     {
         $this->authorize( 'view', $depot );
-
-
         $item = $depot->items()->where( 'depot_item.id', $pivot_id )->first();
-
         if ( $item->pivot->qta_depot - $request->qta >= 0 ) {
-
             if ( $request->depot_id ) {
                 $reason = "M";
                 $info = "TRANS DEPOT";
@@ -271,12 +265,10 @@ class DepotController extends Controller
                 $reason = $request->reason;
                 $info = "UNLOAD ITEM";
             }
-
-
             // unload item from source depot
             $item->pivot->decrement( 'qta_depot', $request->qta );
             // create movement unload
-            $movement = $this->createMovement( -1 * $request->qta, $reason, $pivot_id, $info );
+            $movement = $this->createMovement( -1 * $request->qta, $reason, $pivot_id, $info, null, $request->project_id );
 
 
             // create movement load id a destination depot is defined
@@ -315,7 +307,7 @@ class DepotController extends Controller
      * @param $info
      * @return Movement
      */
-    public function createMovement( $qta, $reason, $pivot_id, $info, $movement_id = null )
+    public function createMovement( $qta, $reason, $pivot_id, $info, $movement_id = null, $project_id = null )
     {
         $mov = new Movement();
         $mov->user_id = Auth::id();
@@ -325,7 +317,9 @@ class DepotController extends Controller
         $mov->depot_item_id = $pivot_id;
         $mov->info = $info;
         $mov->movement_id = $movement_id;
+        $mov->project_id = $project_id;
         $mov->save();
+
 
         return $mov;
     }

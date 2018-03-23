@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
 
@@ -21,23 +22,23 @@ $this->post( 'password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail
 $this->get( 'password/reset/{token}', 'Auth\ResetPasswordController@showResetForm' )->name( 'password.reset' );
 $this->post( 'password/reset', 'Auth\ResetPasswordController@reset' )->name( 'auth.password.reset' );
 
+
+//******************ADMIN APP ROUTES**************************//
 Route::group( [ 'middleware' => [ 'auth' ], 'prefix' => 'admin', 'as' => 'admin.' ], function () {
 
     Route::resource( 'abilities', 'Admin\AbilitiesController' );
-    Route::post( 'abilities_mass_destroy', [ 'uses' => 'Admin\AbilitiesController@massDestroy', 'as' => 'abilities.mass_destroy' ] );
     Route::resource( 'roles', 'Admin\RolesController' );
-    Route::post( 'roles_mass_destroy', [ 'uses' => 'Admin\RolesController@massDestroy', 'as' => 'roles.mass_destroy' ] );
     Route::resource( 'groups', 'Admin\GroupsController' );
     Route::resource( 'users', 'Admin\UsersController' );
-    Route::post( 'users_mass_destroy', [ 'uses' => 'Admin\UsersController@massDestroy', 'as' => 'users.mass_destroy' ] );
+
 } );
 
-//**********************************************************//
+//******************MAIN APP ROUTES**************************//
 Route::group( [ 'middleware' => [ 'auth' ], ], function () {
     Route::get( '/home', [ 'uses' => 'HomeController@index', 'as' => 'home' ] );
 
 
-    // LANGUAGE
+    // Language
     Route::get( 'lang/{locale}', 'HomeController@switchLocale' );
     // Add Items to Depot
     Route::get( 'depots/{depot}/item/add', [ 'uses' => 'DepotController@addItem', 'as' => 'depots.add_item' ] );
@@ -46,8 +47,10 @@ Route::group( [ 'middleware' => [ 'auth' ], ], function () {
     // unload item from depot
     Route::get( 'depots/{depot}/item/{item}/unload', [ 'uses' => 'DepotController@unloadItem', 'as' => 'depots.unload_item' ] );
     Route::post( 'depots/{depot}/item/{item}/unload', [ 'uses' => 'DepotController@createMovementItem', 'as' => 'depots.movement_item' ] );
-
+// manage depots
     Route::resource( 'depots', 'DepotController' );
-
+// manage items
     Route::resource( 'items', 'ItemController' );
+    // manage project
+    Route::resource( 'projects', 'ProjectController' );
 } );

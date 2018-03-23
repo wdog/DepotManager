@@ -62,10 +62,20 @@ class DepotItemDetail implements DataViewComponentInterface, ArrayDataAggregateI
             new TableCaption( 'Movement Details: ' . $data->name ),
             ( new Column( 'qta', trans( 'global.qta' ) ) ),
             ( new Column( 'reason', trans( 'global.reason' ) ) )->setValueFormatter( function ( $val, $row ) {
-                return "<strong>" . Helpers::ComboReasons( $val, true ) . "</strong><br>"
 
-                    . $row->user->name . "<br>"
-                    . "<small>" . $row->created_at->format( 'd/m/Y H:i:s' ) . "</small>";
+                $rs = "<ul class='list-group'>";
+                if ( $row->project ) {
+                    $rs .= "<li class='list-group-item list-group-item-dark   '>" . $row->project->name . "</li>";
+                }
+                if ( $val ) {
+                    $rs .= "<li class='list-group-item list-group-item-dark '>" . Helpers::ComboReasons( $val, true ) . "</li>";
+                }
+
+                $rs .= "<li class='list-group-item list-group-item-info '>" . trans( 'global.app_from' ) . ":  " . $row->user->name . " ";
+                $rs .= '<i class="fa fa-clock-o " aria-hidden="true"></i> ' . $row->created_at->format( 'd/m/Y H:i:s' ) . "</li>";
+
+                $rs .= "</ul>";
+return $rs;
 
             } ),
 

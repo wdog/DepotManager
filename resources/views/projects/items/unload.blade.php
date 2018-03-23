@@ -12,26 +12,14 @@
 				</div>
 			    <div class="card-body">
 				    <div class="card-text">
-					    
-					    {{-- PROJECTS  --}}
-					    <div class="form-group">
-				            {!! Form::label('project_id', trans('global.projects.title').'*', ['class' => 'control-label']) !!}
-						    {!! Form::select('project_id', $projects, old('projects_id'), ['class' => 'form-control select2 ', 'placeholder' => '-', 'required' => '']) !!}
-						    @if($errors->has('project_id'))
-							    <p class="help-block alert alert-danger">{{ $errors->first('project_id') }}</p>
-						    @endif
-						</div>
-					    
-					    {{-- REASON --}}
-					    {{--
+					{{-- REASON --}}
 					    <div class="form-group">
 				            {!! Form::label('reason', trans('global.reason').'*', ['class' => 'control-label']) !!}
-						    {!! Form::select('reason', \App\Utils\Helpers::ComboReasons(), old('reason'), ['class' => 'form-control select2 ', 'placeholder' => '-', 'required' => '']) !!}
+						    {!! Form::select('reason', \App\Utils\Helpers::ComboReasons(), old('reason'), ['class' => 'form-control select2 ', 'placeholder' => '', 'required' => '']) !!}
 						    @if($errors->has('reason'))
 							    <p class="help-block alert alert-danger">{{ $errors->first('reason') }}</p>
 						    @endif
-						</div>
-						--}}
+					</div>
 					    {{-- QTA --}}
 					    <div class="form-group">
 						{!! Form::label('qta', trans('global.qta').'*', ['class' => 'control-label']) !!}
@@ -39,7 +27,7 @@
 						    @if($errors->has('qta'))
 							    <p class="help-block alert alert-danger">{{ $errors->first('qta') }}</p>
 						    @endif
-			            </div>
+			        </div>
 					    {{-- DEPOTS --}}
 					    @can('depots_manage')
 						    <div class="form-group">
@@ -70,11 +58,11 @@
 					{{-- INFO --}}
 						<ul class="list-group ">
 							<li class="list-group-item list-group-item-info "><strong>@lang('global.code')
-									: </strong> {{ $item->code }}</li>
+										: </strong> {{ $item->code }}</li>
 							<li class="list-group-item list-group-item-info"><strong>@lang('global.serial')
-									: </strong>{{ $item->serial }}</li>
+										: </strong>{{ $item->serial }}</li>
 							<li class="list-group-item list-group-item-info"><strong>@lang('global.qta')
-									: </strong>{{ $item->pivot->qta_depot }}  {{ $item->um }}</li>
+										: </strong>{{ $item->pivot->qta_depot }}  {{ $item->um }}</li>
 						</ul>
 					</div>
 	            </div>

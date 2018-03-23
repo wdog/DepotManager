@@ -14,5 +14,6 @@ class RoleSeed extends Seeder
         Bouncer::allow('administrator')->to('users_manage');
         Bouncer::allow('administrator')->to('depots_manage');
         Bouncer::allow('administrator')->to('items_manage');
+        Bouncer::allow('administrator')->to('projects_manage');
     }
 }

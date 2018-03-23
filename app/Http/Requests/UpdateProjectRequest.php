@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateDepotRequest extends FormRequest
+class UpdateProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,14 @@ class UpdateDepotRequest extends FormRequest
      */
     public function rules()
     {
-        $id = $this->route( 'depot' )->id;
+        $id = $this->route( 'project' )->id;
         return [
             'group_id' => 'required',
-            'name'     => [
-                'required',
-                Rule::unique( 'depots' )->where( 'id', '<>', $id ),
+
+            'name' => [
                 'max:25',
+                'required',
+                Rule::unique( 'projects' )->where( 'id', '<>', $id ),
             ],
         ];
     }

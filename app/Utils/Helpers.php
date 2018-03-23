@@ -29,7 +29,7 @@ class Helpers
      */
     public static function ComboUnita()
     {
-        return [ '' => '---', 'MT' => 'MT', 'NR' => 'NR' ];
+        return [ '' => '-', 'MT' => 'MT', 'NR' => 'NR' ];
     }
 
     /**
@@ -38,15 +38,15 @@ class Helpers
     public static function ComboReasons( $val = null, $render = false )
     {
         $data = [
-            ''  => '---',
+            ''  => '-',
             'I' => 'INFRASTRUTTURA',
             'C' => 'ALLACCIO CLIENTI',
             'V' => 'VARIE',
         ];
 
         if ( $render ) {
-            $data[ 'L' ] = 'DEPOT LOAD';
-            $data[ 'M' ] = 'MOVE INTRA DEPOT';
+            $data[ 'L' ] = trans('global.app_load_depo');
+            $data[ 'M' ] = trans('global.app_movement_depo');
         }
 
         if ( $val ) {

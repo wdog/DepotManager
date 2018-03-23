@@ -25,7 +25,7 @@ class StoreDepotRequest extends FormRequest
     {
         return [
             'group_id' => 'required',
-            'name'     => 'required|unique:depots,name',
+            'name'     => 'required|max:25|unique:depots,name',
         ];
     }
 }

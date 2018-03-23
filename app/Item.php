@@ -58,10 +58,24 @@ class Item extends Model
         return $this->code . " - " . $this->name . " - " . $this->um;
     }
 
-    public function available(  )
+    /**
+     * @return mixed
+     */
+    public function available()
     {
         //return $this->depots;
-        return $this->depots()->sum('qta_depot');
+        return $this->depots()->sum( 'qta_depot' );
 
+    }
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function projects()
+    {
+        return $this->belongsToMany( Project::class )->withPivot( [
+            'id', 'qta_req',
+        ] )->withTimestamps();
     }
 }

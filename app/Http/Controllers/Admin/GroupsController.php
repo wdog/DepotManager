@@ -34,14 +34,14 @@ class GroupsController extends Controller
         }
         $provider = new EloquentDataProvider( Group::with('users'));
         $columns = [
-            new Column( 'name' ),
+            new Column( 'name' ,trans('global.name') ),
 
-            ( new Column( 'users', '' ) )->setValueFormatter( function ( $row ) {
+            ( new Column( 'users', trans('global.users.title') ) )->setValueFormatter( function ( $row ) {
                 $u = '';
                 foreach( $row as $user){
-                    $u .= "<li>" . $user->name . "</li>";
+                    $u .= "<li class='list-group-item list-group-item-text list-group-item-info'>" . $user->name . "</li>";
                 }
-                return "<ul class='list-unstyled list-group'>" . $u . "</ul>";
+                return "<ul class='list-group '>" . $u . "</ul>";
             } ),
 
             ( new Column( 'actions', '' ) )

@@ -30,19 +30,33 @@ class UserSeed extends Seeder
 
         $user->assign( 'administrator' );
 
+        // USERS
         $group2 = \App\Group::create( [
-            'name' => 'Workers',
-            'slug' => 'workers',
+            'name' => 'Consalvi',
+            'slug' => 'consalvi',
         ] );
 
         $user2 = User::create( [
-            'name'     => 'Coyote',
-            'email'    => 'coyote@ex.com',
-            'password' => bcrypt( 'coyote' ),
+            'name'     => 'consalvi',
+            'email'    => 'consalvi@fibraweb.it',
+            'password' => bcrypt( 'consalvi' ),
             'group_id' => $group2->id,
         ] );
 
-        $user->assign( 'worker' );
+        $user2->assign( 'worker' );
+        // USERS
+        $group3 = \App\Group::create( [
+            'name' => 'Tenerini',
+            'slug' => 'tenerini',
+        ] );
 
+        $user3 = User::create( [
+            'name'     => 'tenerini',
+            'email'    => 'tenerini@fibraweb.it',
+            'password' => bcrypt( 'tenerini' ),
+            'group_id' => $group3->id,
+        ] );
+
+        $user3->assign( 'worker' );
     }
 }

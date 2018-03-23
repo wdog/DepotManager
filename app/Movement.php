@@ -19,6 +19,8 @@ class Movement extends Model
         'qta',
         'info',
         'movement_id',
+        'project_id',
+        'reason',
     ];
 
     /**
@@ -30,6 +32,9 @@ class Movement extends Model
     }
 
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function item()
     {
         return $this->belongsTo( Item::class );
@@ -41,5 +46,13 @@ class Movement extends Model
     public function group()
     {
         return $this->belongsTo( Group::class );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function project()
+    {
+        return $this->belongsTo( Project::class );
     }
 }

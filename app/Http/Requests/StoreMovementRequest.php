@@ -24,8 +24,8 @@ class StoreMovementRequest extends FormRequest
     public function rules()
     {
         return [
-            'reason'   => 'required',
-            'qta'      => 'required|integer|min:1',
+            'project_id' => 'required',
+            'qta'        => 'required|integer|min:1',
 
         ];
 

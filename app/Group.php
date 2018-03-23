@@ -25,4 +25,12 @@ class Group extends Model
     {
         return $this->hasMany( User::class );
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function projects()
+    {
+        return $this->belongsToMany( Project::class );
+    }
 }
