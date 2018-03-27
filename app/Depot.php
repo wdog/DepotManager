@@ -69,6 +69,15 @@ class Depot extends Model
 
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function depotItems()
+    {
+        return $this->belongsTo( DepotItem::class , 'id','depot_id');
+    }
+
+
+    /**
      * @return string
      */
     public function getFullNameAttribute()

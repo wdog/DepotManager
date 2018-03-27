@@ -13,9 +13,11 @@ use App\Http\Requests\UpdateDepotRequest;
 use App\Item;
 use App\Movement;
 use App\Utils\DepotItemDetail;
+use DB;
 use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use ViewComponents\Eloquent\EloquentDataProvider;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\Grids\Component\DetailsRow;
@@ -61,6 +63,7 @@ class DepotController extends Controller
                         // view button
                         $view = link_to_route( 'depots.show', '', $row->id, [ 'class' => 'btn btn-sm btn-success fa fa-eye' ] );
                         $buttons = $view . " " . $edit . " " . $delete;
+
                         return $buttons;
                     } ),
 
@@ -169,20 +172,33 @@ class DepotController extends Controller
         $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
         // $grid->setRecordView( new CustomRow() );
         BootstrapStyling::applyTo( $grid );
+
+        $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
+        $row->setAttribute( 'class', 'bg-secondary text-light' );
+
         return view( 'depots.view', compact( 'depot', 'grid' ) );
     }
 
 
     /**
-     * @param Depot $depot
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|void
      */
-    public function destroy( Depot $depot )
+    public function destroy( $id )
     {
         if ( !Gate::allows( 'depots_manage' ) ) {
             return abort( 401 );
         }
-        // TODO
-        // controllare che non ci sia nessun oggetto dentro poi si puo disabilitare non cancellare
+        $depot = Depot::findOrFail( $id );
+        //   $depot->depotItems->where( 'qta_ini', "<>", DB::raw( 'qta_depot' ) )->count() > 0
+        if ( !$depot->depotItems ) {
+            $depot->delete();
+        } else {
+            Session::flash( 'error', 'Depot with Items' );
+        }
+
+        return redirect()->route( 'depots.index' );
+
     }
 
 

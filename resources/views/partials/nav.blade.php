@@ -70,7 +70,7 @@
 	            @endcan
 	            {{--MANAGE PROJECTS--}}
 	            @can('projects_manage')
-		            <li class="nav-item {{ $request->segment(1) == 'items' ? 'active' : '' }}">
+		            <li class="nav-item {{ $request->segment(1) == 'projects' ? 'active' : '' }}">
                         <a class='nav-link' href="{{ route('projects.index') }}">
                             <i class="fa fa-binoculars"></i>
                             <span class="title">@lang('global.projects.title')</span>

@@ -23,6 +23,7 @@ use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Component\Control\FilterControl;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
 use ViewComponents\ViewComponents\Component\Control\PaginationControl;
+use ViewComponents\ViewComponents\Component\Html\Tag;
 use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
 use ViewComponents\ViewComponents\Data\ArrayDataProvider;
 use ViewComponents\ViewComponents\Data\Operation\FilterOperation;
@@ -70,7 +71,8 @@ class ItemController extends Controller
                     $req_projects = $this->getQtaFromProjects( $row->id );
                     $unloaded = $this->getQtaFromMovements( $row->id );
                     $val = $req_projects + $unloaded - $row->available();
-                    return ( $val <= 0 ) ? 'OK' : $val;
+                    //return ( $val <= 0 ) ? '-' : $val;
+                    return $val;
                 } ),
 
 
@@ -101,7 +103,10 @@ class ItemController extends Controller
         $grid->getColumn( 'req' )->getDataCell()->setAttribute( 'class', 'fit-cell text-right' );
         // filter on top of table
         $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
-        $grid = $grid->render();
+
+        $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
+        $row->setAttribute( 'class', 'bg-secondary text-light' );
+
 
         return view( 'items.index', compact( 'grid' ) );
 

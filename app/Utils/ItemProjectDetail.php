@@ -39,18 +39,13 @@ class ItemProjectDetail implements DataViewComponentInterface, ArrayDataAggregat
         $project_id = $this->getData()->pivot->project_id;;
 
 
-        $movements = Movement::with('user')
-            ->where('project_id',$project_id)
-            ->where('item_id',$item_id)
+        $movements = Movement::with( 'user' )
+            ->where( 'project_id', $project_id )
+            ->where( 'item_id', $item_id )
             ->orderBy( 'created_at', 'desc' )
             ->get();
 
-
-
-       // return ( dump( $movements ) );
-
-
-
+        // return ( dump( $movements ) );
         $provider = new ArrayDataProvider( $movements );
         $columns = [
             new TableCaption( 'Movements Details:' ),
