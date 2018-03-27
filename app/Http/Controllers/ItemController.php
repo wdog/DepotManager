@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\ItemProject;
+use App\Movement;
 use App\Utils\Helpers;
 use App\Utils\ItemDetail;
 use Illuminate\Support\Facades\Gate;
@@ -48,10 +49,8 @@ class ItemController extends Controller
             return abort( 401 );
         }
 
-        $requirements = ItemProject::groupBy('item_id')->selectRaw('sum(qta_req) as qta, item_id')->pluck('qta','item_id');
 
-
-        $provider = new EloquentDataProvider( Item::orderBy('name') );
+        $provider = new EloquentDataProvider( Item::orderBy( 'name' ) );
         $input = new InputSource( $_GET );
         $grid = new Grid(
             $provider,
@@ -66,11 +65,12 @@ class ItemController extends Controller
                     return $row->available();
                 } ),
 
-                ( new Column( 'qta_req', trans( 'global.qta' ) ." P" ) )->setValueCalculator( function ( $row ) use ($requirements){
-                    if ( isset($requirements[$row->id]))
-                        return $requirements[$row->id];
-                    else
-                        return 0;
+
+                ( new Column( 'req', trans( 'global.qta' ) . "_Needs" ) )->setValueCalculator( function ( $row ) {
+                    $req_projects = $this->getQtaFromProjects( $row->id );
+                    $unloaded = $this->getQtaFromMovements( $row->id );
+                    $val = $req_projects + $unloaded - $row->available();
+                    return ( $val <= 0 ) ? 'OK' : $val;
                 } ),
 
 
@@ -98,6 +98,7 @@ class ItemController extends Controller
         // custom style
         $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
         $grid->getColumn( 'qta' )->getDataCell()->setAttribute( 'class', 'fit-cell text-right' );
+        $grid->getColumn( 'req' )->getDataCell()->setAttribute( 'class', 'fit-cell text-right' );
         // filter on top of table
         $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
         $grid = $grid->render();
@@ -212,4 +213,35 @@ class ItemController extends Controller
 
         return redirect()->route( 'items.index' );
     }
+
+
+    /**
+     * numero di items richiesti da progetti aperti
+     *
+     * @param $item_id
+     * @return mixed
+     */
+    private function getQtaFromProjects( $item_id )
+    {
+        return ItemProject::with( 'project' )
+            ->where( 'item_id', $item_id )
+            ->whereHas( 'project', function ( $q ) {
+                $q->where( 'closed', 0 );
+            } )
+            ->sum( 'qta_req' );
+
+    }
+
+
+    private function getQtaFromMovements( $item_id )
+    {
+        return Movement::with( 'project' )
+            ->where( 'item_id', $item_id )
+            ->whereNotNull( 'project_id' )
+            ->whereHas( 'project', function ( $q ) {
+                $q->where( 'closed', 0 );
+            } )
+            ->sum( 'qta' );
+    }
+
 }
