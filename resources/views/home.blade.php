@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<h4 class="text-center">~@lang('global.depots.title')~</h4>
+	<h4 class="text-center elegantshd">@lang('global.depots.title')</h4>
 	<div class="row">
 		@foreach($depots as $depot)
 			<div class="col-sm-4 p-1">
@@ -28,30 +28,33 @@
 		@endforeach
 	</div>
 	
-	<h4 class="text-center">~@lang('global.projects.title')~</h4>
+	<h4 class="text-center elegantshd">@lang('global.projects.title')</h4>
 	<div class="row">
 			@foreach($projects as $project)
 			<div class="col-sm-4 p-1">
-					
-					<div class="card">
-						  <img src="/img/projects.jpg" class="card-img-top img-fluid">
-					  <div class="card-body">
-					
-					    <h4 class="card-title text-center">{{ $project->name }}</h4>
-					
-					  </div>
+				<div class="card">
+					<img src="/img/projects.jpg" class="card-img-top img-fluid">
+					<div class="card-body">
+						@can('projects_manage')
+							<a href="{{ route('projects.show',$project) }}" class='dashboard'>
+						@endcan
+								<h4 class="text-center">{{ $project->name }}</h4>
+								@can('projects_manage')
+							</a>
+						@endcan
 					</div>
-					
 				</div>
+			</div>
 		@endforeach
 	
 	</div>
 	
 	<style>
 		.card {
-			box-shadow    : 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+			box-shadow    : 0 4px 8px 0 rgba(0, 0, 0, 0.2) !important;
 			transition    : 0.3s;
 			border-radius : 5px;
+			
 		}
 		
 		.card img {
@@ -59,7 +62,7 @@
 		}
 		
 		.card:hover {
-			box-shadow : 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+			box-shadow : 0 8px 16px 0 rgba(0, 0, 0, 0.2) !important;
 		}
 
 	</style>

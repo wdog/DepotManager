@@ -29,11 +29,13 @@ class Project extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function items()
     {
-        return $this->belongsTo( Items::class );
+        return $this->belongsToMany( Item::class )
+            ->withPivot( [ 'qta_req' ] )
+            ->withTimestamps();
     }
 
     /**
@@ -52,5 +54,14 @@ class Project extends Model
     {
         return $query->where( 'closed', false );
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function movements()
+    {
+        return $this->hasMany( Movement::class );
+    }
+
 
 }

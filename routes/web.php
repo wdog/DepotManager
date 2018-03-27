@@ -52,5 +52,9 @@ Route::group( [ 'middleware' => [ 'auth' ], ], function () {
 // manage items
     Route::resource( 'items', 'ItemController' );
     // manage project
+    // Add Items to Depot
+    Route::get( 'projects/{project}/item/add', [ 'uses' => 'ProjectController@addItem', 'as' => 'projects.add_item' ] );
+    Route::post( 'projects/{project}/add_missing', [ 'uses' => 'ProjectController@addMissing', 'as' => 'projects.add_missing' ] );
+    Route::post( 'projects/{project}/item', [ 'uses' => 'ProjectController@storeItem', 'as' => 'projects.store_item' ] );
     Route::resource( 'projects', 'ProjectController' );
 } );

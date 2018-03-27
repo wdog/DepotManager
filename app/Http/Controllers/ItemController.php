@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
+use App\ItemProject;
 use App\Utils\Helpers;
 use App\Utils\ItemDetail;
 use Illuminate\Support\Facades\Gate;
@@ -47,6 +48,9 @@ class ItemController extends Controller
             return abort( 401 );
         }
 
+        $requirements = ItemProject::groupBy('item_id')->selectRaw('sum(qta_req) as qta, item_id')->pluck('qta','item_id');
+
+
         $provider = new EloquentDataProvider( Item::orderBy('name') );
         $input = new InputSource( $_GET );
         $grid = new Grid(
@@ -61,6 +65,15 @@ class ItemController extends Controller
                 ( new Column( 'qta', trans( 'global.qta' ) ) )->setValueCalculator( function ( $row ) {
                     return $row->available();
                 } ),
+
+                ( new Column( 'qta_req', trans( 'global.qta' ) ." P" ) )->setValueCalculator( function ( $row ) use ($requirements){
+                    if ( isset($requirements[$row->id]))
+                        return $requirements[$row->id];
+                    else
+                        return 0;
+                } ),
+
+
                 ( new Column( 'actions', '' ) )
                     ->setValueCalculator( function ( $row ) {
                         $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );

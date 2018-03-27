@@ -2,7 +2,7 @@
 
 @section('content')
 	
-	{!! Form::open(['method' => 'POST', 'route' => ['depots.movement_item', $depot, $item->pivot->id ]]) !!}
+	{!! Form::open(['method' => 'POST', 'route' => ['depots.movement_item', $depot, $pivot_item->id ]]) !!}
 	
 	<div class="row">
 		<div class="col-sm-6">
@@ -58,23 +58,23 @@
 			    </div>
 			    <div class="card-footer">
 			        {!! Form::submit(trans('global.app_unload'), ['class' => 'btn btn-sm btn-danger']) !!}
-				    {!! link_to_route('depots.show',trans('global.app_back_to_list'),$depot,['class'=> 'btn btn-sm btn-info pull-right']) !!}
+				    {!! link_to_route('depots.show',trans('global.app_back_to_list'),$depot,['class'=> 'btn btn-sm btn-info']) !!}
 				</div>
 		    </div>
 		</div>
 		<div class="col-sm-6">
 			<div class="card">
 				<div class="card-body">
-					<h4 class="card-title">{{ $item->name }}</h4>
+					<h4 class="card-title">{{ $pivot_item->item->name }}</h4>
 					<div class="card-text">
 					{{-- INFO --}}
 						<ul class="list-group ">
 							<li class="list-group-item list-group-item-info "><strong>@lang('global.code')
-									: </strong> {{ $item->code }}</li>
+									: </strong> {{ $pivot_item->item->code }}</li>
 							<li class="list-group-item list-group-item-info"><strong>@lang('global.serial')
-									: </strong>{{ $item->serial }}</li>
+									: </strong>{{ $pivot_item->serial }}</li>
 							<li class="list-group-item list-group-item-info"><strong>@lang('global.qta')
-									: </strong>{{ $item->pivot->qta_depot }}  {{ $item->um }}</li>
+									: </strong>{{ $pivot_item->qta_depot }}  {{ $pivot_item->item->um }}</li>
 						</ul>
 					</div>
 	            </div>

@@ -20,6 +20,7 @@ class Movement extends Model
         'info',
         'movement_id',
         'project_id',
+        'item_id',
         'reason',
     ];
 
@@ -35,9 +36,9 @@ class Movement extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function item()
+    public function depotItem()
     {
-        return $this->belongsTo( Item::class );
+        return $this->belongsTo( DepotItem::class, 'depot_item_id', 'id' );
     }
 
     /**
@@ -54,5 +55,13 @@ class Movement extends Model
     public function project()
     {
         return $this->belongsTo( Project::class );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function item()
+    {
+        return $this->belongsTo( Item::class );
     }
 }

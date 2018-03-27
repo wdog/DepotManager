@@ -38,6 +38,16 @@ class DepotItem extends Model
         return $this->hasMany( Movement::class );
     }
 
+    public function item()
+    {
+        return $this->belongsTo( Item::class );
+    }
+
+
+    public function depot()
+    {
+        return $this->belongsTo( Depot::class );
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

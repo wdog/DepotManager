@@ -20,8 +20,9 @@
 @section('javascript')
 	<script>
 		$(function () {
-            $("card a").click(function (e) {
+            $("td a.btn").click(function (e) {
                 e.stopPropagation();
+                
             });
         })
 		

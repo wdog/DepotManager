@@ -62,7 +62,9 @@ class Depot extends Model
     {
         return $this->belongsToMany( Item::class )->withPivot( [
             'id', 'qta_ini', 'qta_depot', 'serial',
-        ] )->wherePivot( 'qta_depot', '>', 0 )->withTimestamps();
+        ] )
+            ->wherePivot( 'qta_depot', '>', 0 )
+            ->withTimestamps();
     }
 
 

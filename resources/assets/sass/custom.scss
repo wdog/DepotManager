@@ -22,3 +22,11 @@
   width       : 1%;
   white-space : nowrap;
 }
+
+/* TEXT SHADOW */
+
+.elegantshd {
+  color            : #131313;
+  letter-spacing   : .15em;
+  text-shadow      : 1px -1px 0 #767676, -1px 2px 1px #737272, -2px 4px 1px #cecece, -3px 6px 1px #dedede, -4px 8px 1px #eeeeee, -5px 10px 1px #fefefe;
+}

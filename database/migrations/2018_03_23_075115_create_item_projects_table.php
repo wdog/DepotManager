@@ -13,7 +13,7 @@ class CreateItemProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create( 'item_projects', function ( Blueprint $table ) {
+        Schema::create( 'item_project', function ( Blueprint $table ) {
             $table->increments( 'id' );
 
             $table->integer( 'item_id' )->unsigned()->nullable();
@@ -35,6 +35,6 @@ class CreateItemProjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists( 'item_projects' );
+        Schema::dropIfExists( 'item_project' );
     }
 }

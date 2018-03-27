@@ -63,11 +63,8 @@ class Item extends Model
      */
     public function available()
     {
-        //return $this->depots;
         return $this->depots()->sum( 'qta_depot' );
-
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -78,4 +75,19 @@ class Item extends Model
             'id', 'qta_req',
         ] )->withTimestamps();
     }
+
+
+    /**
+     * get movements of an item
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function movements()
+    {
+        return $this->hasManyThrough(Movement::class,DepotItem::class);
+
+    }
+
+
+
 }

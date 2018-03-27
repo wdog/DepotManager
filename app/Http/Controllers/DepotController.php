@@ -219,7 +219,7 @@ class DepotController extends Controller
             'qta_depot' => $request->qta_ini,
             'serial'    => $request->serial,
         ] );
-        $this->createMovement( $request->qta_ini, "L", $depotItem->id, "SYSTEM LOAD" );
+        $this->createMovement( $request->qta_ini, "L", $depotItem->id, $request->item_id, "SYSTEM LOAD" );
         return redirect()->route( 'depots.show', $depot );
     }
 
@@ -233,11 +233,14 @@ class DepotController extends Controller
      */
     public function unloadItem( Depot $depot, $pivot_id )
     {
-        $item = $depot->items()->where( 'depot_item.id', $pivot_id )->first();
+
+        $pivot_item = DepotItem::with( 'item' )->find( $pivot_id );
+
         // only open projects
         $projects = Auth::user()->group->projects()->open()->pluck( 'projects.name', 'projects.id' );
         $depots = Depot::where( 'id', '!=', $depot->id )->get()->pluck( 'full_name', 'id' );
-        return view( 'depots.items.unload', compact( 'depot', 'item', 'depots', 'projects' ) );
+
+        return view( 'depots.items.unload', compact( 'depot', 'pivot_item', 'depots', 'projects' ) );
 
     }
 
@@ -254,43 +257,49 @@ class DepotController extends Controller
     public function createMovementItem( StoreMovementRequest $request, Depot $depot, $pivot_id )
     {
         $this->authorize( 'view', $depot );
-        $item = $depot->items()->where( 'depot_item.id', $pivot_id )->first();
-        if ( $item->pivot->qta_depot - $request->qta >= 0 ) {
+
+
+        $pivot_item = DepotItem::with( 'item' )->find( $pivot_id );
+
+
+        if ( $pivot_item->qta_depot - $request->qta >= 0 ) {
             if ( $request->depot_id ) {
                 $reason = "M";
                 $info = "TRANS DEPOT";
+                $project_id = null;
             } else {
                 $reason = $request->reason;
                 $info = "UNLOAD ITEM";
+                $project_id = $request->project_id;
             }
             // unload item from source depot
-            $item->pivot->decrement( 'qta_depot', $request->qta );
+            $pivot_item->decrement( 'qta_depot', $request->qta );
             // create movement unload
-            $movement = $this->createMovement( -1 * $request->qta, $reason, $pivot_id, $info, null, $request->project_id );
+            $movement = $this->createMovement( -1 * $request->qta, $reason, $pivot_id, $pivot_item->item_id, $info, null, $project_id );
 
 
             // create movement load id a destination depot is defined
             if ( $request->depot_id ) {
                 // find old item
-                $item = DepotItem::find( $pivot_id );
+
                 // find new depot
                 $destDepot = Depot::find( $request->depot_id );
                 // create load into new depot
                 $depotItem = DepotItem::create(
                     [
-                        'item_id'   => $item->item_id,
+                        'item_id'   => $pivot_item->item_id,
                         'depot_id'  => $destDepot->id,
                         'qta_ini'   => $request->qta,
                         'qta_depot' => $request->qta,
-                        'serial'    => $item->serial,
+                        'serial'    => $pivot_item->serial,
                     ]
                 );
                 // create movement in new depot
-                $this->createMovement( $request->qta, $reason, $depotItem->id, $info, $movement->id );
+                $this->createMovement( $request->qta, $reason, $depotItem->id, $pivot_item->item_id, $info, $movement->id );
             }
 
         } else {
-            $request->session()->flash( 'error', 'too many items to unload' );
+            $request->session()->flash( 'error', 'Too many items to unload' );
         }
 
         return redirect()->route( 'depots.show', $depot );
@@ -303,9 +312,11 @@ class DepotController extends Controller
      * @param $reason
      * @param $pivot_id
      * @param $info
+     * @param null $movement_id movimento padre
+     * @param null $project_id
      * @return Movement
      */
-    public function createMovement( $qta, $reason, $pivot_id, $info, $movement_id = null, $project_id = null )
+    public function createMovement( $qta, $reason, $pivot_id, $item_id, $info, $movement_id = null, $project_id = null )
     {
         $mov = new Movement();
         $mov->user_id = Auth::id();
@@ -313,6 +324,7 @@ class DepotController extends Controller
         $mov->qta = $qta;
         $mov->reason = $reason;
         $mov->depot_item_id = $pivot_id;
+        $mov->item_id = $item_id;
         $mov->info = $info;
         $mov->movement_id = $movement_id;
         $mov->project_id = $project_id;

@@ -16,22 +16,22 @@ class CreateMovementsTable extends Migration
         Schema::create( 'movements', function ( Blueprint $table ) {
             $table->increments( 'id' );
 
-
             $table->integer( 'user_id' )->unsigned()->nullable();
             $table->foreign( 'user_id' )->references( 'id' )->on( 'users' )->onDelete( 'cascade' );
-
 
             $table->integer( 'group_id' )->unsigned()->nullable();
             $table->foreign( 'group_id' )->references( 'id' )->on( 'groups' )->onDelete( 'cascade' );
 
             $table->integer( 'depot_item_id' )->unsigned()->nullable();
             $table->foreign( 'depot_item_id' )->references( 'id' )->on( 'depot_item' )->onDelete( 'cascade' );
+
+            $table->integer( 'movement_id' )->unsigned()->nullable();
+            $table->foreign( 'movement_id' )->references( 'id' )->on( 'movements' )->onDelete( 'cascade' );
+
             $table->integer( 'qta' )->nullable();
             $table->string( 'reason' )->nullable();
             $table->text( 'info' )->nullable();
 
-            $table->integer( 'movement_id' )->unsigned()->nullable();
-            $table->foreign( 'movement_id' )->references( 'id' )->on( 'movements' )->onDelete( 'cascade' );
             $table->timestamps();
         } );
     }

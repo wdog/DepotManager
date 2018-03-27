@@ -3,19 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Group;
+use App\Http\Requests\StoreItemProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Item;
+use App\ItemProject;
+use App\Movement;
 use App\Project;
+use App\Utils\ItemProjectDetail;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 use ViewComponents\Eloquent\EloquentDataProvider;
 use ViewComponents\Grids\Component\Column;
+use ViewComponents\Grids\Component\CsvExport;
+use ViewComponents\Grids\Component\DetailsRow;
 use ViewComponents\Grids\Grid;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
 use ViewComponents\ViewComponents\Component\Control\PaginationControl;
+use ViewComponents\ViewComponents\Component\ManagedList\RecordView;
 use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
+use ViewComponents\ViewComponents\Data\ArrayDataProvider;
 use ViewComponents\ViewComponents\Input\InputSource;
 
+/**
+ * Class ProjectController
+ *
+ * @package App\Http\Controllers
+ */
 class ProjectController extends Controller
 {
     /**
@@ -35,8 +50,8 @@ class ProjectController extends Controller
             $provider, [
                 ( new Column( 'name', trans( 'global.name' ) ) )->setValueFormatter( function ( $val, $row ) {
 
-                    if ($row->closed == true){
-                        $rs = "<del class='text-danger'>" .  $row->name . "</del>";
+                    if ( $row->closed == true ) {
+                        $rs = "<del class='text-danger'>" . $row->name . "</del>";
                     } else {
                         $rs = $row->name;
                     }
@@ -111,11 +126,48 @@ class ProjectController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Project $project
-     * @return void
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show( Project $project )
     {
-        //
+        if ( !Gate::allows( 'projects_manage' ) ) {
+            return abort( 401 );
+        }
+
+        $list = $project->movements()->groupBy( 'item_id' )->selectRaw( ' sum(qta) as qta, item_id' )->pluck( 'qta', 'item_id' );
+
+        $missings = Movement::with( 'item' )
+            ->where( 'project_id', $project->id )
+            ->whereNotIn( 'item_id', ItemProject::where( 'project_id', $project->id )->pluck( 'item_id' ) )
+            ->get();
+
+        $input = new InputSource( $_GET );
+        $provider = new ArrayDataProvider( $project->items );
+        $columns = [
+            new Column( 'code', trans( 'global.code' ) ),
+            new Column( 'name', trans( 'global.items.title' ) ),
+            new Column( 'pivot.qta_req', trans( 'global.qta' ) ),
+            ( new Column( 'usage', 'Usage ' ) )->setValueFormatter( function ( $val, $row ) use ( $list ) {
+                if ( isset( $list[ $row->id ] ) )
+                    return -1 * $list[ $row->id ];
+                else
+                    return 0;
+
+            } ),
+            new DetailsRow( new ItemProjectDetail() ),
+            new CsvExport( $input->option( 'csv' ) ),
+
+        ];
+        $grid = new Grid( $provider, $columns );
+        BootstrapStyling::applyTo( $grid );
+        $grid->getColumn( 'code' )->getDataCell()->setAttribute( 'class', 'text-right fit-cell' );
+        $grid->getColumn( 'pivot.qta_req' )->getDataCell()->setAttribute( 'class', 'text-right fit-cell' );
+        $grid->getColumn( 'usage' )->getDataCell()->setAttribute( 'class', 'text-right fit-cell' );
+        // filter on top of table
+        $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
+
+
+        return view( 'projects.view', compact( 'project', 'grid', 'missings' ) );
     }
 
     /**
@@ -166,7 +218,62 @@ class ProjectController extends Controller
         }
         $project = Project::findOrFail( $id );
         $project->delete();
-
         return redirect()->route( 'projects.index' );
+    }
+
+
+    /**
+     * @param Project $project
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     */
+    public function addItem( Project $project )
+    {
+        if ( !Gate::allows( 'projects_manage' ) ) {
+            return abort( 401 );
+        }
+        $items = Item::enabled()->get()->pluck( 'full_name', 'id' );
+        return view( 'projects.items.add', compact( 'project', 'items' ) );
+    }
+
+    /**
+     * ADMIN LOADS AN ITEM
+     *
+     * @param StoreItemProjectRequest $request
+     * @param Project $project
+     * @return string
+     */
+    public function storeItem( StoreItemProjectRequest $request, Project $project )
+    {
+        if ( !Gate::allows( 'projects_manage' ) ) {
+            return abort( 401 );
+        }
+
+        if ( $project->items()->where( 'item_id', $request->item_id )->exists() ) {
+            ItemProject::where( [ 'item_id' => $request->item_id, 'project_id' => $project->id ] )
+                ->increment( 'qta_req', $request->qta_req );
+        } else {
+            $project->items()->attach( $request->item_id, [ 'qta_req' => $request->qta_req ] );
+        }
+        return redirect()->route( 'projects.show', $project );
+    }
+
+
+    /**
+     * @param Request $request
+     * @param Project $project
+     * @return string
+     */
+    public function addMissing( Request $request, Project $project )
+    {
+        $missings = Movement::with( 'item' )
+            ->where( 'project_id', $project->id )
+            ->whereNotIn( 'item_id', ItemProject::where( 'project_id', $project->id )->pluck( 'item_id' ) )
+            ->get();
+
+        foreach ( $missings as $missing ) {
+            $project->items()->attach( $missing->item );
+        }
+
+        return redirect()->route( 'projects.show', $project );
     }
 }
