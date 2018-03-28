@@ -14,73 +14,75 @@ class UserSeed extends Seeder
     {
 
 
-        $group_1 = \App\Group::create( [
+        $adminGroup = \App\Group::create( [
             'name' => 'Administrators',
             'slug' => 'admin',
         ] );
 
 
-        $user_1 = User::create( [
-            'name'     => 'Admin',
-            'email'    => 'admin@ex.com',
-            'password' => bcrypt( 'admin' ),
-            'group_id' => $group_1->id,
-        ] );
+        User::create( [
+            'name'     => 'Carlo Chech',
+            'email'    => 'carlo.chech@fibraweb.it',
+            'password' => bcrypt( 'secret' ),
+            'group_id' => $adminGroup->id,
+        ] )->assign( 'administrator' );
+
+        User::create( [
+            'name'     => 'Domenico Basile',
+            'email'    => 'domenico.basile@fibraweb.it',
+            'password' => bcrypt( 'domenico' ),
+            'group_id' => $adminGroup->id,
+        ] )->assign( 'administrator' );
 
 
-        $user_1->assign( 'administrator' );
+        User::create( [
+            'name'     => 'Elisa Sportoletti',
+            'email'    => 'elisa.sportoletti@fibraweb.it',
+            'password' => bcrypt( 'elisa' ),
+            'group_id' => $adminGroup->id,
+        ] )->assign( 'administrator' );
 
-        // USERS
-        $group_2 = \App\Group::create( [
+        // USER GROUP 1
+        $group_1 = \App\Group::create( [
             'name' => 'Consalvi',
             'slug' => 'consalvi',
         ] );
 
-        $user_2 = User::create( [
+        User::create( [
             'name'     => 'consalvi',
             'email'    => 'consalvi@fibraweb.it',
             'password' => bcrypt( 'consalvi' ),
-            'group_id' => $group_2->id,
-        ] );
-
-        $user_2->assign( 'worker' );
-        // USERS
-        $group_3 = \App\Group::create( [
+            'group_id' => $group_1->id,
+        ] )->assign( 'worker' );
+        // USER GROUP 2
+        $group_2 = \App\Group::create( [
             'name' => 'Tenerini',
             'slug' => 'tenerini',
         ] );
 
-        $user_3 = User::create( [
+        User::create( [
             'name'     => 'tenerini',
             'email'    => 'tenerini@fibraweb.it',
             'password' => bcrypt( 'tenerini' ),
-            'group_id' => $group_3->id,
-        ] );
-
-        $user_3->assign( 'worker' );
-
-
-        $depot_1 = \App\Depot::create( [
-            'name'     => 'DEPOSITO 1',
             'group_id' => $group_2->id,
-        ] );
+        ] )->assign( 'worker' );
 
-        $depot_2 = \App\Depot::create( [
-            'name'     => 'DEPOSITO 2',
-            'group_id' => $group_3->id,
-        ] );
+
+        \App\Depot::create( [ 'name' => 'DEPOSITO ' . $group_1->name, 'group_id' => $group_1->id ] );
+        \App\Depot::create( [ 'name' => 'DEPOSITO ' . $group_2->name, 'group_id' => $group_2->id ] );
+        \App\Depot::create( [ 'name' => 'DEPOSITO ' . $adminGroup->name, 'group_id' => $adminGroup->id, ] );
 
         $project_1 = \App\Project::create( [
             'name' => 'Project 1',
         ] );
+        $project_1->groups()->attach( $adminGroup );
         $project_1->groups()->attach( $group_1 );
-        $project_1->groups()->attach( $group_2 );
 
         $project_1 = \App\Project::create( [
             'name' => 'Project 2',
         ] );
+        $project_1->groups()->attach( $adminGroup );
         $project_1->groups()->attach( $group_1 );
-        $project_1->groups()->attach( $group_2 );
 
 
         \App\Item::create( [
@@ -106,10 +108,6 @@ class UserSeed extends Seeder
             'name' => 'Fibra 144',
             'um'   => 'MT',
         ] );
-
-
-
-
 
 
     }
