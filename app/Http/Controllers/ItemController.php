@@ -75,7 +75,6 @@ class ItemController extends Controller
                     return $val;
                 } ),
 
-
                 ( new Column( 'actions', '' ) )
                     ->setValueCalculator( function ( $row ) {
                         $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
@@ -106,11 +105,7 @@ class ItemController extends Controller
 
         $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
         $row->setAttribute( 'class', 'bg-secondary text-light' );
-
-
         return view( 'items.index', compact( 'grid' ) );
-
-
     }
 
     /**
