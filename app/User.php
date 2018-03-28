@@ -31,10 +31,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'group_id',
-
     ];
-
-
     /**
      * Hash password
      *
@@ -53,7 +50,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo( Group::class );
     }
-
 
 }
 

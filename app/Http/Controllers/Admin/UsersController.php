@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUsersRequest;
 use App\Http\Requests\Admin\UpdateUsersRequest;
-use Bouncer;
 use ViewComponents\Eloquent\EloquentDataProvider;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\Grids\Grid;
@@ -104,7 +103,6 @@ class UsersController extends Controller
         }
         $roles = Role::get()->pluck( 'name', 'name' );
         $groups = Group::get()->pluck( 'name', 'id' );
-
 
         $user = User::findOrFail( $id );
 

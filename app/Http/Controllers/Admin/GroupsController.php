@@ -73,7 +73,6 @@ class GroupsController extends Controller
         if ( !Gate::allows( 'users_manage' ) ) {
             return abort( 401 );
         }
-
         return view( 'admin.groups.create' );
     }
 
@@ -104,8 +103,6 @@ class GroupsController extends Controller
         if ( !Gate::allows( 'users_manage' ) ) {
             return abort( 401 );
         }
-
-
         return view( 'admin.groups.edit', compact( 'group' ) );
     }
 
@@ -119,10 +116,7 @@ class GroupsController extends Controller
         if ( !Gate::allows( 'users_manage' ) ) {
             return abort( 401 );
         }
-
         $group->update( $request->all() );
-
-
         return redirect()->route( 'admin.groups.index' );
     }
 

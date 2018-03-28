@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\NotifyUnload;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
 
@@ -57,4 +58,13 @@ Route::group( [ 'middleware' => [ 'auth' ], ], function () {
     Route::post( 'projects/{project}/add_missing', [ 'uses' => 'ProjectController@addMissing', 'as' => 'projects.add_missing' ] );
     Route::post( 'projects/{project}/item', [ 'uses' => 'ProjectController@storeItem', 'as' => 'projects.store_item' ] );
     Route::resource( 'projects', 'ProjectController' );
+} );
+
+
+Route::get( '/mail', function () {
+    // send an email to "batman@batcave.io"
+    //Mail::to( 'carlo@fibraweb.it' )->send( new NotifyUnload() );
+
+    return new NotifyUnload( \App\Movement::find(28));
+    dd( "Mail Send Successfully" );
 } );

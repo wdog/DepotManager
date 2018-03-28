@@ -11,13 +11,19 @@ use App\Http\Requests\StoreMovementRequest;
 use App\Http\Requests\UpdateDepotRequest;
 
 use App\Item;
+use App\Mail\NotifyUnload;
 use App\Movement;
+use App\User;
 use App\Utils\DepotItemDetail;
 use DB;
 use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Silber\Bouncer\Bouncer;
+use Silber\Bouncer\BouncerFacade;
+use Silber\Bouncer\Database\Role;
 use ViewComponents\Eloquent\EloquentDataProvider;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\Grids\Component\DetailsRow;
@@ -334,6 +340,11 @@ class DepotController extends Controller
      */
     public function createMovement( $qta, $reason, $pivot_id, $item_id, $info, $movement_id = null, $project_id = null )
     {
+
+
+        $users = User::whereIs( 'administrator' )->get( [ 'name', 'email' ] );
+
+
         $mov = new Movement();
         $mov->user_id = Auth::id();
         $mov->group_id = Auth::user()->group_id;
@@ -346,7 +357,7 @@ class DepotController extends Controller
         $mov->project_id = $project_id;
         $mov->save();
 
-
+        Mail::to( $users )->queue( new NotifyUnload( $mov ) );
         return $mov;
     }
 }
