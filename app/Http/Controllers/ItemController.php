@@ -67,12 +67,15 @@ class ItemController extends Controller
                 } ),
 
 
-                ( new Column( 'req', trans( 'global.qta' ) . "_Needs" ) )->setValueCalculator( function ( $row ) {
+                ( new Column( 'req', trans( 'global.qta_needs' ) ) )->setValueCalculator( function ( $row ) {
                     $req_projects = $this->getQtaFromProjects( $row->id );
                     $unloaded = $this->getQtaFromMovements( $row->id );
                     $val = $req_projects + $unloaded - $row->available();
-                    //return ( $val <= 0 ) ? '-' : $val;
-                    return $val;
+
+
+
+                    return ( $val < 0 ) ? "<b class='badge-danger badge'>$val</b>": $val;
+
                 } ),
 
                 ( new Column( 'actions', '' ) )

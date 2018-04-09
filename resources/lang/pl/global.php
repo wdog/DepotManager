@@ -13,6 +13,7 @@ return [
     'code'                => 'kod',
     'name'                => 'Nazwa',
     'qta'                 => 'Ilość',
+    'qta_needs'           => 'Needed',
     'serial'              => 'seryjny',
     'reason'              => 'Cause',
     'unit'                => "Jednostka",

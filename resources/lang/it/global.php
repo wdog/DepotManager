@@ -16,6 +16,7 @@ return [
     'code'                => 'Codice',
     'name'                => 'Nome',
     'qta'                 => 'Qta',
+    'qta_needs'           => 'Qta Rich.',
     'serial'              => 'Seriale',
     'unit'                => "Unita'",
     'disabled'            => 'Disabilitato',

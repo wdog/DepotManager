@@ -16,6 +16,7 @@ return [
     'code'                => 'Code',
     'name'                => 'Name',
     'qta'                 => 'Qty',
+    'qta_needs'           => 'Needed',
     'serial'              => 'Serial',
     'reason'              => 'Cause',
     'unit'                => "Unit",
