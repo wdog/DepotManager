@@ -180,7 +180,7 @@ class DepotController extends Controller
         BootstrapStyling::applyTo( $grid );
 
         $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
-        $row->setAttribute( 'class', 'bg-secondary text-light' );
+        $row->setAttribute( 'class', 'bg-navy text-light' );
 
         return view( 'depots.view', compact( 'depot', 'grid' ) );
     }

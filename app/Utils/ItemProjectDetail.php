@@ -48,7 +48,7 @@ class ItemProjectDetail implements DataViewComponentInterface, ArrayDataAggregat
         // return ( dump( $movements ) );
         $provider = new ArrayDataProvider( $movements );
         $columns = [
-            new TableCaption( 'Movements Details:' ),
+            new TableCaption( 'Movements Details' ),
             ( new Column( 'depot', trans( 'global.depots.title' ) ) )
                 ->setValueFormatter( function ( $val, $row ) {
                     return $row->depotItem->depot->name;

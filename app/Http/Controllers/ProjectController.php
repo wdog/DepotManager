@@ -172,7 +172,7 @@ class ProjectController extends Controller
         $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
 
         $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
-        $row->setAttribute( 'class', 'bg-secondary text-light' );
+        $row->setAttribute( 'class', 'bg-navy text-light' );
         return view( 'projects.view', compact( 'project', 'grid', 'missings' ) );
     }
 

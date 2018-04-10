@@ -65,25 +65,28 @@ class DepotItemDetail implements DataViewComponentInterface, ArrayDataAggregateI
         $movements = $depotItem->movements;
         $provider = new ArrayDataProvider( $movements );
         $columns = [
-            new TableCaption( 'Movement Details: ' . $data->name ),
-            ( new Column( 'qta', trans( 'global.qta' ) ) ),
-            ( new Column( 'reason', trans( 'global.reason' ) ) )->setValueFormatter( function ( $val, $row ) {
+            new TableCaption( "Movement Details: <h3>{$data->name}</h3>" ),
+            ( new Column( 'qta', trans( 'global.qta' ) ) )
+                ->setValueFormatter( function ( $val ) {
+                    return "<span class='badge badge-success'>" . $val . "</span>";
+                } ),
+            ( new Column( 'reason', trans( 'global.reason' ) ) )
+                ->setValueFormatter( function ( $val, $row ) {
 
-                $rs = "<ul class='list-group'>";
-                if ( $row->project ) {
-                    $rs .= "<li class='list-group-item list-group-item-dark   '>" . $row->project->name . "</li>";
-                }
-                if ( $val ) {
-                    $rs .= "<li class='list-group-item list-group-item-dark '>" . Helpers::ComboReasons( $val, true ) . "</li>";
-                }
 
-                $rs .= "<li class='list-group-item list-group-item-info '>" . trans( 'global.app_from' ) . ":  " . $row->user->name . " ";
-                $rs .= '<i class="fa fa-clock-o " aria-hidden="true"></i> ' . $row->created_at->format( 'd/m/Y H:i:s' ) . "</li>";
+                    $rs = "";
+                    if ( $val ) {
+                        $rs .= "<span class='badge badge-warning'>" . Helpers::ComboReasons( $val, true ) . "</span> ";
+                    }
+                    if ( $row->project ) {
+                        $rs .= "<span class='badge badge-danger'>" . $row->project->name . "</span> ";
+                    }
+                    $rs .= "<span class='badge badge-info'>" . $row->user->name . "</span> ";
+                    $rs .= ' <small><span class="fa fa-clock-o " aria-hidden="true"></span> ' . $row->created_at->format( 'd/m/Y H:i:s' ) . "</small>";
 
-                $rs .= "</ul>";
-return $rs;
+                    return $rs;
 
-            } ),
+                } ),
 
         ];
 

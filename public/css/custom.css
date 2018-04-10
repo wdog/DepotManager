@@ -47,3 +47,6 @@ main {
     display : inherit;
 }
 
+.bg-navy {
+    background-color : #3F729B !important;
+}

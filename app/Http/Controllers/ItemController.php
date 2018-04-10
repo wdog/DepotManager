@@ -107,7 +107,7 @@ class ItemController extends Controller
         $grid->getTileRow()->detach()->attachTo( $grid->getTableHeading() );
 
         $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
-        $row->setAttribute( 'class', 'bg-secondary text-light' );
+        $row->setAttribute( 'class', 'bg-navy text-light' );
         return view( 'items.index', compact( 'grid' ) );
     }
 
