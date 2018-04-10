@@ -28,7 +28,8 @@ class HomeController extends Controller
     public function index()
     {
         $depots = Depot::list()->get();
-        $projects = Auth::user()->group->projects;
+        $projects = Auth::user()->group->projects()->open()->get();
+
         return view( 'home', compact( 'depots','projects' ) );
     }
 

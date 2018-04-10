@@ -159,7 +159,7 @@ class DepotController extends Controller
             new Column( 'pivot.serial', trans( 'global.serial' ) ),
             ( new Column( 'pivot.qta_ini', 'Qta', trans( 'global.qta' ) ) )// CHANGE XXX
             ->setValueCalculator( function ( $row ) {
-                return $row->pivot->qta_depot . " <small>" . $row->um . "</small>";
+                return "<span class='badge badge-success'>" . $row->pivot->qta_depot . " <small>" . $row->um . "</small></span>";
             } ),
 
             ( new Column( 'actions', '' ) )

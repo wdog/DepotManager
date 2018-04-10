@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use ViewComponents\Eloquent\EloquentDataProvider;
 use ViewComponents\Grids\Component\Column;
+use ViewComponents\Grids\Component\ColumnSortingControl;
 use ViewComponents\Grids\Component\CsvExport;
 use ViewComponents\Grids\Component\DetailsRow;
 use ViewComponents\Grids\Grid;
@@ -44,46 +45,50 @@ class ProjectController extends Controller
             return abort( 401 );
         }
 
-        $provider = new EloquentDataProvider( Project::class );
+        $provider = new EloquentDataProvider( Project::orderBy('closed') );
         $input = new InputSource( $_GET );
-        $grid = new Grid(
-            $provider, [
-                ( new Column( 'name', trans( 'global.name' ) ) )->setValueFormatter( function ( $val, $row ) {
 
-                    if ( $row->closed == true ) {
-                        $rs = "<del class='text-danger'>" . $row->name . "</del>";
-                    } else {
-                        $rs = $row->name;
-                    }
+        $columns = [
+            ( new Column( 'name', trans( 'global.name' ) ) )
+                ->setValueFormatter( function ( $val, $row ) {
 
-                    return $rs;
+                if ( $row->closed == true ) {
+                    $rs = "<del class='text-danger'>" . $row->name . "</del>";
+                } else {
+                    $rs = $row->name;
+                }
+
+                return $rs;
+            } ),
+            // GOUPS
+            ( new Column( 'groups', trans( 'global.groups.title' ) ) )
+                ->setValueFormatter( function ( $groups ) {
+                $u = '';
+                foreach ( $groups as $group ) {
+                    $u .= "<li class='list-group-item list-group-item-text list-group-item-info'>" . $group->name . "</li>";
+                }
+                return "<ul class='list-group'>" . $u . "</ul>";
+            } ),
+            //  ACTIONS
+            ( new Column( 'actions', '' ) )
+                ->setValueCalculator( function ( $row ) {
+                    $edit = link_to_route( 'projects.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
+                    $delete = link_to_route( 'projects.destroy', '', $row->id, [
+                        'class'        => 'btn btn-danger btn-sm fa fa-trash',
+                        'data-method'  => "delete",
+                        'data-confirm' => "Are you sure?",
+                    ] );
+                    $view = link_to_route( 'projects.show', '', $row->id, [ 'class' => 'btn btn-sm btn-success fa fa-eye' ] );
+                    $buttons = $view . " " . $edit . " " . $delete;
+                    return $buttons;
                 } ),
-                // GOUPS
-                ( new Column( 'groups', trans( 'global.groups.title' ) ) )->setValueFormatter( function ( $groups ) {
-                    $u = '';
-                    foreach ( $groups as $group ) {
-                        $u .= "<li class='list-group-item list-group-item-text list-group-item-info'>" . $group->name . "</li>";
-                    }
-                    return "<ul class='list-group'>" . $u . "</ul>";
-                } ),
-                //  ACTIONS
-                ( new Column( 'actions', '' ) )
-                    ->setValueCalculator( function ( $row ) {
-                        $edit = link_to_route( 'projects.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
-                        $delete = link_to_route( 'projects.destroy', '', $row->id, [
-                            'class'        => 'btn btn-danger btn-sm fa fa-trash',
-                            'data-method'  => "delete",
-                            'data-confirm' => "Are you sure?",
-                        ] );
-                        $view = link_to_route( 'projects.show', '', $row->id, [ 'class' => 'btn btn-sm btn-success fa fa-eye' ] );
-                        $buttons = $view . " " . $edit . " " . $delete;
-                        return $buttons;
-                    } ),
+            new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
+            new PaginationControl( $input->option( 'page', 1 ), 5 ),
+            new ColumnSortingControl('name', $input->option('sort')),
+        ];
 
-                new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
-                new PaginationControl( $input->option( 'page', 1 ), 5 ),
-            ]
-        );
+
+        $grid = new Grid( $provider, $columns );
 
         BootstrapStyling::applyTo( $grid );
         $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell' );
@@ -135,7 +140,7 @@ class ProjectController extends Controller
         }
 
         $list = $project->movements()->groupBy( 'item_id' )->selectRaw( ' sum(qta) as qta, item_id' )->pluck( 'qta', 'item_id' );
-
+        // items movimentati ma non contemplati nel progetto
         $missings = Movement::with( 'item' )
             ->where( 'project_id', $project->id )
             ->whereNotIn( 'item_id', ItemProject::where( 'project_id', $project->id )->pluck( 'item_id' ) )

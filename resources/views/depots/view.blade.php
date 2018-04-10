@@ -22,7 +22,6 @@
 		$(function () {
             $("td a.btn").click(function (e) {
                 e.stopPropagation();
-                
             });
         })
 		
