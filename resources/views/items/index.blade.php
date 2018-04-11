@@ -44,10 +44,10 @@
             });
 
             $('.openImage').on('click', function () {
-                var url = $(this).data('url');
-                var code= $(this).data('code');
+                var url  = $(this).data('url');
+                var code = $(this).data('code');
                 $("#itemImageLabel").text(code);
-                
+
                 $("#itemImageUrl").attr("src", url);
                 $('#itemImage').modal('show');
             });

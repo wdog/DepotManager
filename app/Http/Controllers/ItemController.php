@@ -67,7 +67,7 @@ class ItemController extends Controller
                 $req_projects = $this->getQtaFromProjects( $row->id );
                 $unloaded = $this->getQtaFromMovements( $row->id );
                 $val = $req_projects + $unloaded - $row->available();
-                return ( $val < 0 ) ? "<b class='badge-danger badge'>$val</b>" : $val;
+                return ( $val > 0 ) ? "<b class='badge-danger badge'>$val</b>" : $val;
 
             } ),
 
