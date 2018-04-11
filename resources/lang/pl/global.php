@@ -18,6 +18,8 @@ return [
     'reason'              => 'Cause',
     'unit'                => "Jednostka",
     'disabled'            => 'Niepełnosprawny',
+    'image'               => 'Immagine',
+
     'app_create'          => 'Stwórz',
     'app_save'            => 'zapisać',
     'app_edit'            => 'edytować',

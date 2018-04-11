@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use SahusoftCom\EloquentImageMutator\EloquentImageMutatorTrait;
 
 /**
  * Class Item
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Item extends Model
 {
+    use EloquentImageMutatorTrait;
     /**
      * @var array
      */
@@ -20,7 +22,10 @@ class Item extends Model
         'vendor_id',
         'um',
         'disabled',
+        'item_image',
     ];
+
+    protected $image_fields = [ 'item_image' ];
 
     /**
      * @var array
@@ -84,10 +89,9 @@ class Item extends Model
      */
     public function movements()
     {
-        return $this->hasManyThrough(Movement::class,DepotItem::class);
+        return $this->hasManyThrough( Movement::class, DepotItem::class );
 
     }
-
 
 
 }

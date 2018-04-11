@@ -20,6 +20,7 @@ return [
     'serial'              => 'Seriale',
     'unit'                => "Unita'",
     'disabled'            => 'Disabilitato',
+    'image'               => 'Immagine',
     'reason'              => 'Motivo',
     'app_create'          => 'Crea',
     'app_save'            => 'Salva',

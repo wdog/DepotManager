@@ -21,6 +21,7 @@ return [
     'reason'              => 'Cause',
     'unit'                => "Unit",
     'disabled'            => 'Disabled',
+    'image'               => 'Image',
     'app_create'          => 'Create',
     'app_save'            => 'Save',
     'app_edit'            => 'Edit',

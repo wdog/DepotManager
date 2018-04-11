@@ -35,10 +35,10 @@ class ItemDetail implements DataViewComponentInterface, ArrayDataAggregateInterf
     public function render()
     {
         $item_id = $this->getData()->id;
-        $depots = Item::find( $item_id )->depots;
-        $provider = new ArrayDataProvider( $depots );
+        $item_depots = Item::find( $item_id )->depots;
+        $provider = new ArrayDataProvider( $item_depots );
         $columns = [
-            new TableCaption( 'Item Details:' ),
+            new TableCaption( 'Item Details' ),
             ( new Column( 'name', trans('global.depots.title') ) ),
             ( new Column( 'group.name', trans('global.groups.title') ) ),
             ( new Column( 'updated_at', trans('global.app_last_update') ) )->setValueFormatter( function ( $val ) {

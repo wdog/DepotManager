@@ -46,3 +46,5 @@ if ($component->getLinkTemplateName() === 'controls/pagination/link') {
         <?= $component->renderLink($total, '»') ?>
     </ul>
 </nav>
+
+<!-- END PAGINATION -->

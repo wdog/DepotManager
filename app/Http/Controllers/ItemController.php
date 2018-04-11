@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Item;
 use Illuminate\Http\Request;
-use Psy\Util\Json;
-use stdClass;
+use Illuminate\Support\Facades\Input;
 use ViewComponents\Eloquent\EloquentDataProvider;
 use ViewComponents\Grids\Component\Column;
 use ViewComponents\Grids\Component\CsvExport;
@@ -50,52 +49,48 @@ class ItemController extends Controller
             return abort( 401 );
         }
 
-
         $provider = new EloquentDataProvider( Item::orderBy( 'name' ) );
         $input = new InputSource( $_GET );
-        $grid = new Grid(
-            $provider,
-            // all components are optional, you can specify only columns
-            [
-                new FilterControl( 'code', FilterOperation::OPERATOR_STR_CONTAINS, $input->option( 'code' ) ),
-                //new SelectFilterControl( 'um', Helpers::ComboUnita(), $input->option( 'um' ) ),
 
-                new Column( 'code', trans( 'global.code' ) ),
-                new Column( 'name', trans( 'global.name' ) ),
-                ( new Column( 'qta', trans( 'global.qta' ) ) )->setValueCalculator( function ( $row ) {
-                    return $row->available();
+        $columns = [
+            new FilterControl( 'code', FilterOperation::OPERATOR_STR_CONTAINS, $input->option( 'code' ) ),
+            //new SelectFilterControl( 'um', Helpers::ComboUnita(), $input->option( 'um' ) ),
+
+            new Column( 'code', trans( 'global.code' ) ),
+            new Column( 'name', trans( 'global.name' ) ),
+            ( new Column( 'qta', trans( 'global.qta' ) ) )->setValueCalculator( function ( $row ) {
+                return $row->available();
+            } ),
+
+
+            ( new Column( 'req', trans( 'global.qta_needs' ) ) )->setValueCalculator( function ( $row ) {
+                $req_projects = $this->getQtaFromProjects( $row->id );
+                $unloaded = $this->getQtaFromMovements( $row->id );
+                $val = $req_projects + $unloaded - $row->available();
+                return ( $val < 0 ) ? "<b class='badge-danger badge'>$val</b>" : $val;
+
+            } ),
+
+            ( new Column( 'actions', '' ) )
+                ->setValueCalculator( function ( $row ) {
+                    $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
+                    $delete = link_to_route( 'items.destroy', '', $row->id, [
+                        'class'        => 'btn btn-sm btn-danger fa fa-trash',
+                        'data-method'  => "delete",
+                        'data-confirm' => "Are you sure?",
+
+                    ] );
+                    $view = "<a class='openImage btn btn-success btn-sm fa' data-code='{$row->code}' data-url='{$row->item_image->profile->url}' data-toggle='modal' data-target='#itemImage'><i class='fa fa-eye'></i></a>";
+                    return $edit . " " . $delete . " " . $view;
                 } ),
 
+            new DetailsRow( new ItemDetail() ),
+            new PageSizeSelectControl( $input->option( 'ps', 50 ), [ 50, 100, 500 ] ),
+            new PaginationControl( $input->option( 'page', 1 ), 5 ),
 
-                ( new Column( 'req', trans( 'global.qta_needs' ) ) )->setValueCalculator( function ( $row ) {
-                    $req_projects = $this->getQtaFromProjects( $row->id );
-                    $unloaded = $this->getQtaFromMovements( $row->id );
-                    $val = $req_projects + $unloaded - $row->available();
-
-
-
-                    return ( $val < 0 ) ? "<b class='badge-danger badge'>$val</b>": $val;
-
-                } ),
-
-                ( new Column( 'actions', '' ) )
-                    ->setValueCalculator( function ( $row ) {
-                        $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
-                        $delete = link_to_route( 'items.destroy', '', $row->id, [
-                            'class'        => 'btn btn-sm btn-danger fa fa-trash',
-                            'data-method'  => "delete",
-                            'data-confirm' => "Are you sure?",
-
-                        ] );
-                        return $edit . " " . $delete;
-                    } ),
-
-                new DetailsRow( new ItemDetail() ),
-                new PageSizeSelectControl( $input->option( 'ps', 50 ), [ 50, 100, 500 ] ),
-                new PaginationControl( $input->option( 'page', 1 ), 5 ),
-
-                new CsvExport( $input->option( 'csv' ) ),
-            ] );
+            new CsvExport( $input->option( 'csv' ) ),
+        ];
+        $grid = new Grid( $provider, $columns );
 
         // grid style
         BootstrapStyling::applyTo( $grid );
@@ -108,6 +103,7 @@ class ItemController extends Controller
 
         $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
         $row->setAttribute( 'class', 'bg-navy text-light' );
+        $grid = $grid->render();
         return view( 'items.index', compact( 'grid' ) );
     }
 

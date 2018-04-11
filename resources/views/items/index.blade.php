@@ -11,10 +11,47 @@
                 {!! $grid or '' !!}
         </div>
     </div>
+	
+	
+	{{----}}
+	
+	<!-- Modal -->
+	<div class="modal fade" id="itemImage" tabindex="-1" role="dialog" aria-labelledby="itemImageLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+        <div class="modal-header alert-primary">
+            <h5 class="modal-title" id="itemImageLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+        <div class="modal-body">
+            <img id='itemImageUrl' src="" class="rounded img-thumbnail mx-auto  d-block"/>
+        </div>
+      
+    </div>
+  </div>
+</div>
+	{{----}}
+
 @stop
 
 @section('javascript')
 	<script>
-    
-    </script>
+		$(function () {
+            $("td a.btn").click(function (e) {
+                e.stopPropagation();
+            });
+
+            $('.openImage').on('click', function () {
+                var url = $(this).data('url');
+                var code= $(this).data('code');
+                $("#itemImageLabel").text(code);
+                
+                $("#itemImageUrl").attr("src", url);
+                $('#itemImage').modal('show');
+            });
+
+        })
+	</script>
 @endsection

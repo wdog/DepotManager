@@ -182,6 +182,8 @@ return [
         Laravel\Tinker\TinkerServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+
+        SahusoftCom\EloquentImageMutator\EloquentImageMutatorProvider::class,
         /*
          * Application Service Providers...
          */
