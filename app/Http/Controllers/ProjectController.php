@@ -45,30 +45,30 @@ class ProjectController extends Controller
             return abort( 401 );
         }
 
-        $provider = new EloquentDataProvider( Project::orderBy('closed') );
+        $provider = new EloquentDataProvider( Project::orderBy( 'closed' ) );
         $input = new InputSource( $_GET );
 
         $columns = [
             ( new Column( 'name', trans( 'global.name' ) ) )
                 ->setValueFormatter( function ( $val, $row ) {
 
-                if ( $row->closed == true ) {
-                    $rs = "<del class='text-danger'>" . $row->name . "</del>";
-                } else {
-                    $rs = $row->name;
-                }
+                    if ( $row->closed == true ) {
+                        $rs = "<del class='text-danger'>" . $row->name . "</del>";
+                    } else {
+                        $rs = $row->name;
+                    }
 
-                return $rs;
-            } ),
+                    return $rs;
+                } ),
             // GOUPS
             ( new Column( 'groups', trans( 'global.groups.title' ) ) )
                 ->setValueFormatter( function ( $groups ) {
-                $u = '';
-                foreach ( $groups as $group ) {
-                    $u .= "<li class='list-group-item list-group-item-text list-group-item-info'>" . $group->name . "</li>";
-                }
-                return "<ul class='list-group'>" . $u . "</ul>";
-            } ),
+                    $u = '';
+                    foreach ( $groups as $group ) {
+                        $u .= "<li class='list-group-item list-group-item-text list-group-item-info'>" . $group->name . "</li>";
+                    }
+                    return "<ul class='list-group'>" . $u . "</ul>";
+                } ),
             //  ACTIONS
             ( new Column( 'actions', '' ) )
                 ->setValueCalculator( function ( $row ) {
@@ -82,9 +82,9 @@ class ProjectController extends Controller
                     $buttons = $view . " " . $edit . " " . $delete;
                     return $buttons;
                 } ),
-            new PageSizeSelectControl( $input->option( 'ps', 4 ), [ 2, 4, 10, 100 ] ),
+            new PageSizeSelectControl( $input->option( 'ps', 50 ), [ 10, 50, 100, 500 ] ),
             new PaginationControl( $input->option( 'page', 1 ), 5 ),
-            new ColumnSortingControl('name', $input->option('sort')),
+            new ColumnSortingControl( 'name', $input->option( 'sort' ) ),
         ];
 
 
