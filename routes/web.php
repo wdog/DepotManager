@@ -62,9 +62,6 @@ Route::group( [ 'middleware' => [ 'auth' ], ], function () {
 
 
 Route::get( '/mail', function () {
-    // send an email to "batman@batcave.io"
-    //Mail::to( 'carlo@fibraweb.it' )->send( new NotifyUnload() );
-
     return new NotifyUnload( \App\Movement::find(28));
     dd( "Mail Send Successfully" );
 } );
