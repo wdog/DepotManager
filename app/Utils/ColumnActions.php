@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: chech
- * Date: 19/03/18
- * Time: 12.24
- */
-
 namespace App\Utils;
 
 
