@@ -72,8 +72,6 @@ class DepotItemDetail implements DataViewComponentInterface, ArrayDataAggregateI
                 } ),
             ( new Column( 'reason', trans( 'global.reason' ) ) )
                 ->setValueFormatter( function ( $val, $row ) {
-
-
                     $rs = "";
                     if ( $val ) {
                         $rs .= "<span class='badge badge-warning'>" . Helpers::ComboReasons( $val, true ) . "</span> ";
@@ -83,9 +81,7 @@ class DepotItemDetail implements DataViewComponentInterface, ArrayDataAggregateI
                     }
                     $rs .= "<span class='badge badge-info'>" . $row->user->name . "</span> ";
                     $rs .= ' <small><span class="fa fa-clock-o " aria-hidden="true"></span> ' . $row->created_at->format( 'd/m/Y H:i:s' ) . "</small>";
-
                     return $rs;
-
                 } ),
 
         ];

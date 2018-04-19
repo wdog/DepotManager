@@ -63,11 +63,19 @@ class ProjectController extends Controller
             // GOUPS
             ( new Column( 'groups', trans( 'global.groups.title' ) ) )
                 ->setValueFormatter( function ( $groups ) {
+                    $rs = "";
+                    foreach ( $groups as $group ) {
+                        $rs .= "<span class='badge badge-info'>" .  $group->name. "</span> ";
+                    }
+                    return $rs;
+
+                    /*
                     $u = '';
                     foreach ( $groups as $group ) {
                         $u .= "<li class='list-group-item list-group-item-text list-group-item-info'>" . $group->name . "</li>";
                     }
                     return "<ul class='list-group'>" . $u . "</ul>";
+                    */
                 } ),
             //  ACTIONS
             ( new Column( 'actions', '' ) )

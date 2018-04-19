@@ -255,19 +255,23 @@ class ItemController extends Controller
         if ( !Gate::allows( 'items_manage' ) ) {
             return abort( 401 );
         }
-
-        $item = ItemProject::with('project')->where('item_id', $item->id);
-        $provider = new EloquentDataProvider(  $item  );
+        // mostro richieste di progetti aperti
+        $item = ItemProject::with( 'project' )
+            ->whereHas( 'project', function ( $q ) {
+                $q->where( 'closed', 0 );
+            } )
+            ->where( 'item_id', $item->id );
+        $provider = new EloquentDataProvider( $item );
 
         $grid = new Grid(
             $provider,
             [
-                ( new Column( 'project.name' ) )->setLabel( trans('global.projects.title') ),
-                ( new Column( 'qta_req' ) )->setLabel( trans('global.qta_needs') ),
+                ( new Column( 'project.name' ) )->setLabel( trans( 'global.projects.title' ) ),
+                ( new Column( 'qta_req' ) )->setLabel( trans( 'global.qta_needs' ) ),
                 ( new Column( 'actions', '' ) )
                     ->setValueCalculator( function ( $row ) {
                         $view = link_to_route( 'projects.show', '', $row->project_id, [ 'class' => 'btn btn-sm btn-warning fa fa-product-hunt' ] );
-                        return $view ;
+                        return $view;
                     } ),
             ] );
         BootstrapStyling::applyTo( $grid );

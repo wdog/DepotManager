@@ -30,7 +30,7 @@ class HomeController extends Controller
         $depots = Depot::list()->get();
         $projects = Auth::user()->group->projects()->open()->get();
 
-        return view( 'home', compact( 'depots','projects' ) );
+        return view( 'home', compact( 'depots', 'projects' ) );
     }
 
 
