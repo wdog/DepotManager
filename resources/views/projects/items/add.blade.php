@@ -7,7 +7,7 @@
 	
 	<div class="card">
 		<div class="card-header bg-dark text-white">
-			Load Depot: {{ $project->name }}
+			Load Project: {{ $project->name }}
 		</div>
 		
 		<div class="card-body">

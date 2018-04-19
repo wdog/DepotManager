@@ -8,7 +8,10 @@ return [
     'abilities'           => [ 'title' => 'Permessi' ],
     'management'          => [ 'title' => 'Impostazioni' ],
     'depots'              => [ 'title' => 'Depositi' ],
-    'items'               => [ 'title' => 'Materiale' ],
+    'items'               => [
+        'title'     => 'Materiale',
+        'anomalies' => 'Anomalie',
+    ],
     'projects'            => [
         'title'  => 'Progetti',
         'closed' => 'Terminato',

@@ -5,7 +5,11 @@
 	<div class="card">
         <div class="card-header bg-dark text-white">
                 <div class="pull-left">@lang('global.items.title')</div>
-                <a href="{{ route('items.create') }}" class="pull-right btn btn-sm btn-success">@lang('global.app_add_new')</a>
+                <div class="pull-right">
+                <a href="{{ route('items.create') }}" class="btn btn-sm btn-success">@lang('global.app_add_new') </a>
+                
+                <a href="{{ route('items.anomalies') }}" class="btn btn-sm btn-warning">@lang('global.items.anomalies') </a>
+                </div>
         </div>
         <div class="card-body">
                 {!! $grid or '' !!}

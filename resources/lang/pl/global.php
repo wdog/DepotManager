@@ -8,7 +8,10 @@ return [
     'abilities'           => [ 'title' => 'Abilities' ],
     'management'          => [ 'title' => 'Ustawienia' ],
     'depots'              => [ 'title' => 'zajezdnie' ],
-    'items'               => [ 'title' => 'przedmiotów' ],
+    'items'               => [
+        'title'     => 'przedmiotów',
+        'anomalies' => 'Anomalies',
+    ],
     'projects'               => [ 'title' => '__PROJECT' ],
     'code'                => 'kod',
     'name'                => 'Nazwa',

@@ -53,6 +53,7 @@ Route::group( [ 'middleware' => [ 'auth' ], ], function () {
 
     // manage items
     Route::get( 'items/{item}/project', [ 'uses' => 'ItemController@projects', 'as' => 'items.project' ] );
+    Route::get( 'items/anomalies', [ 'uses' => 'ItemController@anomalies', 'as' => 'items.anomalies' ] );
 
     Route::resource( 'items', 'ItemController' );
     // manage project

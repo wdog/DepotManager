@@ -282,4 +282,36 @@ class ItemController extends Controller
         return view( 'items.projects', compact( 'grid' ) );
     }
 
+
+    public function anomalies()
+    {
+        $anomalies = Movement::whereNotExists( function ( $q ) {
+            $q->select( \DB::raw( 1 ) )
+                ->from( 'item_project' )
+                ->whereRaw( ' item_project.item_id = movements.item_id AND movements.project_id = item_project.project_id' );
+        } )
+            ->where( 'project_id', '>', '0' );
+
+        $provider = new EloquentDataProvider( $anomalies );
+
+        $grid = new Grid(
+            $provider,
+            [
+                ( new Column( 'item.name' ) )->setLabel( trans( 'global.items.title' ) ),
+                ( new Column( 'project.name' ) )->setLabel( trans( 'global.projects.title' ) ),
+                ( new Column( 'user.name' ) )->setLabel( trans( 'global.users.title' ) ),
+                ( new Column( 'group.name' ) )->setLabel( trans( 'global.groups.title' ) ),
+
+                ( new Column( 'actions', '' ) )
+                    ->setValueCalculator( function ( $row ) {
+                        $view = link_to_route( 'projects.show', '', $row->project_id, [ 'class' => 'btn btn-sm btn-warning fa fa-product-hunt' ] );
+
+                        return $view;
+                    } ),
+            ] );
+        BootstrapStyling::applyTo( $grid );
+
+
+        return view( 'items.anomalies', compact( 'grid' ) );
+    }
 }

@@ -8,7 +8,10 @@ return [
     'abilities'           => [ 'title' => 'Abilities' ],
     'management'          => [ 'title' => 'Settings' ],
     'depots'              => [ 'title' => 'Depots' ],
-    'items'               => [ 'title' => 'Items' ],
+    'items'               => [
+        'title'     => 'Items',
+        'anomalies' => 'Anomalies',
+    ],
     'projects'            => [
         'title'  => 'Projects',
         'closed' => 'Terminated',
