@@ -73,7 +73,7 @@ class Depot extends Model
      */
     public function depotItems()
     {
-        return $this->belongsTo( DepotItem::class , 'id','depot_id');
+        return $this->belongsTo( DepotItem::class, 'id', 'depot_id' );
     }
 
 
@@ -83,5 +83,13 @@ class Depot extends Model
     public function getFullNameAttribute()
     {
         return $this->name . " - " . $this->group->name;
+    }
+
+    /**
+     * @param $value
+     */
+    public function setNameAttribute( $value )
+    {
+        $this->attributes[ 'name' ] = strtoupper( $value );
     }
 }

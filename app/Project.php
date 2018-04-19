@@ -64,4 +64,11 @@ class Project extends Model
     }
 
 
+    /**
+     * @param $value
+     */
+    public function setNameAttribute( $value )
+    {
+        $this->attributes[ 'name' ] = strtoupper( $value );
+    }
 }
