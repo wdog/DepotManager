@@ -67,7 +67,8 @@ class ItemController extends Controller
                 $req_projects = $this->getQtaFromProjects( $row->id );
                 $unloaded = $this->getQtaFromMovements( $row->id );
                 $val = $req_projects + $unloaded - $row->available();
-                return ( $val > 0 ) ? "<b class='badge-danger badge'>$val</b>" : $val;
+                $style = ( $val > 0 ) ? 'danger' : 'primary';
+                return "<span class='badge-$style badge'>$val</span>";
 
             } ),
 
@@ -81,7 +82,8 @@ class ItemController extends Controller
 
                     ] );
                     $view = "<a class='openImage btn btn-success btn-sm fa' data-code='{$row->code}' data-url='{$row->item_image->profile->url}' data-toggle='modal' data-target='#itemImage'><i class='fa fa-eye'></i></a>";
-                    return $edit . " " . $delete . " " . $view;
+                    $info = link_to_route( 'items.project', '', $row->id, [ 'class' => 'btn btn-sm btn-warning fa fa-product-hunt' ] );
+                    return $edit . " " . $delete . " " . $view . " " . $info;
                 } ),
 
             new DetailsRow( new ItemDetail() ),
@@ -132,10 +134,8 @@ class ItemController extends Controller
         if ( !Gate::allows( 'items_manage' ) ) {
             return abort( 401 );
         }
-
         Item::create( $request->all() );
         return redirect()->route( 'items.index' );
-
     }
 
     /**
@@ -207,9 +207,7 @@ class ItemController extends Controller
         if ( !Gate::allows( 'items_manage' ) ) {
             return abort( 401 );
         }
-
         $item->delete();
-
         return redirect()->route( 'items.index' );
     }
 
@@ -232,6 +230,10 @@ class ItemController extends Controller
     }
 
 
+    /**
+     * @param $item_id
+     * @return mixed
+     */
     private function getQtaFromMovements( $item_id )
     {
         return Movement::with( 'project' )
@@ -241,6 +243,39 @@ class ItemController extends Controller
                 $q->where( 'closed', 0 );
             } )
             ->sum( 'qta' );
+    }
+
+
+    /**
+     * @param Item $item
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function projects( Item $item )
+    {
+        if ( !Gate::allows( 'items_manage' ) ) {
+            return abort( 401 );
+        }
+
+        $item = ItemProject::with('project')->where('item_id', $item->id);
+        $provider = new EloquentDataProvider(  $item  );
+
+        $grid = new Grid(
+            $provider,
+            [
+                ( new Column( 'project.name' ) )->setLabel( trans('global.projects.title') ),
+                ( new Column( 'qta_req' ) )->setLabel( trans('global.qta_needs') ),
+                ( new Column( 'actions', '' ) )
+                    ->setValueCalculator( function ( $row ) {
+                        $view = link_to_route( 'projects.show', '', $row->project_id, [ 'class' => 'btn btn-sm btn-warning fa fa-product-hunt' ] );
+                        return $view ;
+                    } ),
+            ] );
+        BootstrapStyling::applyTo( $grid );
+        $grid->getColumn( 'qta_req' )->getDataCell()->setAttribute( 'class', 'fit-cell text-right' );
+        $grid->getColumn( 'actions' )->getDataCell()->setAttribute( 'class', 'fit-cell text-right' );
+        $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
+        $row->setAttribute( 'class', 'bg-navy text-light' );
+        return view( 'items.projects', compact( 'grid' ) );
     }
 
 }

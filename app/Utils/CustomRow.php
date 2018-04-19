@@ -14,6 +14,4 @@ class CustomRow extends RecordView
         parent::__construct($view );
     }
 
-
-
 }
