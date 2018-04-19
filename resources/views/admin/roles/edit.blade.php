@@ -11,7 +11,7 @@
         
         <div class="card-body">
             <div class="row">
-                <div class="col-xs-4 offset-sm-4 form-group">
+                <div class="col-sm-4 offset-sm-4 form-group">
 	                {!! Form::label('name', 'Name*', ['class' => 'control-label']) !!}
 	                {!! Form::text('name', old('name'), ['class' => 'form-control', 'placeholder' => '', 'required' => '']) !!}
 	                <p class="help-block"></p>
@@ -23,7 +23,7 @@
                 </div>
             </div>
 	        <div class="row">
-		        <div class="col-xs-4 offset-sm-4 form-group">
+		        <div class="col-sm-4 offset-sm-4 form-group">
 			     {!! Form::label('abilities', 'Abilities', ['class' => 'control-label']) !!}
 			        {!! Form::select('abilities[]', $abilities, old('abilities') ? old('abilities') : $role->getAbilities()->pluck('name', 'name'), ['class' => 'form-control select2', 'multiple' => 'multiple']) !!}
 			        <p class="help-block"></p>

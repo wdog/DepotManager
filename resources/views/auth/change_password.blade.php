@@ -20,7 +20,7 @@
 
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-xs-12 form-group">
+                    <div class="col-sm-12 form-group">
                         {!! Form::label('current_password', 'Current password*', ['class' => 'control-label']) !!}
                         {!! Form::password('current_password', ['class' => 'form-control', 'placeholder' => '']) !!}
                         <p class="help-block"></p>
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-12 form-group">
+                    <div class="col-sm-12 form-group">
                         {!! Form::label('new_password', 'New password*', ['class' => 'control-label']) !!}
                         {!! Form::password('new_password', ['class' => 'form-control', 'placeholder' => '']) !!}
                         <p class="help-block"></p>
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-12 form-group">
+                    <div class="col-sm-12 form-group">
                         {!! Form::label('new_password_confirmation', 'New password confirmation*', ['class' => 'control-label']) !!}
                         {!! Form::password('new_password_confirmation', ['class' => 'form-control', 'placeholder' => '']) !!}
                         <p class="help-block"></p>

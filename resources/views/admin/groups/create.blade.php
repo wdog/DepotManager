@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-xs-4 offset-sm-4 form-group">
+                <div class="col-sm-4 offset-sm-4 form-group">
             
                     {!! Form::label('name', 'Group Name*', ['class' => 'control-label']) !!}
 	                {!! Form::text('name', old('name'), ['class' => 'form-control', 'placeholder' => '', 'required' => '']) !!}
@@ -24,7 +24,7 @@
             </div>
             
             <div class="row">
-                 <div class="col-xs-4 offset-sm-4 form-group">
+                 <div class="col-sm-4 offset-sm-4 form-group">
                     {!! Form::label('slug', 'Slug*', ['class' => 'control-label']) !!}
 	                 {!! Form::text('slug', old('slug'), ['class' => 'form-control', 'placeholder' => '', 'required' => '']) !!}
 	                 <p class="help-block"></p>
