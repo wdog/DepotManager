@@ -277,7 +277,8 @@ class ProjectController extends Controller
             ->get();
 
         foreach ( $missings as $missing ) {
-            $project->items()->attach( $missing->item );
+            
+            $project->items()->attach( $missing->item , ['qta_req' => -1 * $missing->qta ]);
         }
 
         return redirect()->route( 'projects.show', $project );

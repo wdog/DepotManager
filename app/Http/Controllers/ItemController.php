@@ -283,6 +283,9 @@ class ItemController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function anomalies()
     {
         $anomalies = Movement::whereNotExists( function ( $q ) {
