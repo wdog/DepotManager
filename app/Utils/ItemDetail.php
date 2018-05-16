@@ -35,13 +35,16 @@ class ItemDetail implements DataViewComponentInterface, ArrayDataAggregateInterf
     public function render()
     {
         $item_id = $this->getData()->id;
-        $item_depots = Item::find( $item_id )->depots;
+        //$item_depots = Item::find( $item_id )->depots;
+        $item_depots = Item::find( $item_id )->depots->where('pivot.qta_depot','>',0);
+        //dump($item_depots);
         $provider = new ArrayDataProvider( $item_depots );
         $columns = [
             new TableCaption( 'Item Details' ),
             ( new Column( 'name', trans('global.depots.title') ) ),
             ( new Column( 'group.name', trans('global.groups.title') ) ),
-            ( new Column( 'updated_at', trans('global.app_last_update') ) )->setValueFormatter( function ( $val ) {
+            ( new Column( 'pivot.updated_at', trans('global.app_last_update') ) )->setValueFormatter( function ( $val, $row ) {
+
                 return $val->format( 'd/m/Y H:i:s' );
             } ),
             ( new Column( 'pivot.qta_depot', trans('global.qta') ) ),

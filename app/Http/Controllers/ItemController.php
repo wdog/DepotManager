@@ -64,6 +64,7 @@ class ItemController extends Controller
 
 
             ( new Column( 'req', trans( 'global.qta_needs' ) ) )->setValueCalculator( function ( $row ) {
+
                 $req_projects = $this->getQtaFromProjects( $row->id );
                 $unloaded = $this->getQtaFromMovements( $row->id );
                 $val = $req_projects + $unloaded - $row->available();
