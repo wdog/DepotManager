@@ -63,8 +63,14 @@
 
 @section('javascript')
 	<script>
-	 $(".submit").on('click', function(){
-	     $(this).prop('disabled', true);
-     })
+
+
+     $("form").submit(function () {
+         $(this).submit(function () {
+             return false;
+         });
+         return true;
+     });
+		
 	</script>
 @endsection
