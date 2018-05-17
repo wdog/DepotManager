@@ -69,27 +69,51 @@ class ItemController extends Controller
                 $unloaded = $this->getQtaFromMovements( $row->id );
                 $val = $req_projects + $unloaded - $row->available();
 
-                if ( -1 * $val > $row->available()) {
+                if ( -1 * $val > $row->available() ) {
                     return "<span class='badge-warning badge'>Anomalie</span>";
                 }
 
                 $style = ( $val >= 0 ) ? 'danger' : 'primary';
-                $val = ($val < 0 ) ? -1 * $val : $val;
+                $val = ( $val < 0 ) ? -1 * $val : $val;
                 return "<span class='badge-$style badge'>$val</span>";
 
             } ),
 
             ( new Column( 'actions', '' ) )
                 ->setValueCalculator( function ( $row ) {
-                    $edit = link_to_route( 'items.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
+                    $edit = link_to_route( 'items.edit', '', $row->id, [
+                        'class' => 'btn btn-sm btn-info fa fa-pencil',
+                        'data-toggle'    => "tooltip",
+                        'data-placement' => "top",
+                        'title'          => "Edit Info",
+                    ] );
+
+
                     $delete = link_to_route( 'items.destroy', '', $row->id, [
-                        'class'        => 'btn btn-sm btn-danger fa fa-trash',
-                        'data-method'  => "delete",
-                        'data-confirm' => "Are you sure?",
+                        'class'          => 'btn btn-sm btn-danger fa fa-trash',
+                        'data-method'    => "delete",
+                        'data-confirm'   => "Are you sure?",
+                        'data-toggle'    => "tooltip",
+                        'data-placement' => "top",
+                        'title'          => "Delete",
 
                     ] );
-                    $view = "<a class='openImage btn btn-success btn-sm fa' data-code='{$row->code}' data-url='{$row->item_image->profile->url}' data-toggle='modal' data-target='#itemImage'><i class='fa fa-eye'></i></a>";
-                    $info = link_to_route( 'items.project', '', $row->id, [ 'class' => 'btn btn-sm btn-warning fa fa-product-hunt' ] );
+
+                    $view = "<a class='openImage btn btn-success btn-sm fa'
+                                data-toggle    = 'tooltip'
+                                data-placement = 'top'
+                                title          = 'Show Image' 
+                                data-code='{$row->code}'
+                                data-url='{$row->item_image->profile->url}'
+                                data-toggle='modal' 
+                                data-target='#itemImage'><i class='fa fa-image'></i></a>";
+
+                    $info = link_to_route( 'items.project', '', $row->id, [
+                        'class'          => 'btn btn-sm btn-warning fa fa-product-hunt',
+                        'data-toggle'    => "tooltip",
+                        'data-placement' => "top",
+                        'title'          => "Projects with Item",
+                    ] );
                     return $edit . " " . $delete . " " . $view . " " . $info;
                 } ),
 
@@ -112,6 +136,9 @@ class ItemController extends Controller
 
         $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
         $row->setAttribute( 'class', 'bg-navy text-light' );
+        $row->setAttribute( 'data-toggle', "tooltip" );
+        $row->setAttribute( 'data-placement', "left" );
+        $row->setAttribute( 'title', "Details" );
         $grid = $grid->render();
         return view( 'items.index', compact( 'grid' ) );
     }

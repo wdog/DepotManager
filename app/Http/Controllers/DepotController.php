@@ -59,15 +59,28 @@ class DepotController extends Controller
                         $delete = '';
                         // ONLY ADMIN CAN MANGE
                         if ( Auth::user()->can( 'depots_manage' ) ) {
-                            $edit = link_to_route( 'depots.edit', '', $row->id, [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
+                            $edit = link_to_route( 'depots.edit', '', $row->id, [
+                                'class'          => 'btn btn-sm btn-info fa fa-pencil',
+                                'data-toggle'    => "tooltip",
+                                'data-placement' => "top",
+                                'title'          => "Edit info",
+                            ] );
                             $delete = link_to_route( 'depots.destroy', '', $row->id, [
-                                'class'        => 'btn btn-danger btn-sm fa fa-trash',
-                                'data-method'  => "delete",
-                                'data-confirm' => "Are you sure?",
+                                'class'          => 'btn btn-danger btn-sm fa fa-trash',
+                                'data-method'    => "delete",
+                                'data-confirm'   => "Are you sure?",
+                                'data-toggle'    => "tooltip",
+                                'data-placement' => "top",
+                                'title'          => "Delete",
                             ] );
                         }
                         // view button
-                        $view = link_to_route( 'depots.show', '', $row->id, [ 'class' => 'btn btn-sm btn-success fa fa-eye' ] );
+                        $view = link_to_route( 'depots.show', '', $row->id, [
+                            'class'          => 'btn btn-sm btn-success fa fa-eye',
+                            'data-toggle'    => "tooltip",
+                            'data-placement' => "top",
+                            'title'          => "Enter Depot",
+                        ] );
                         $buttons = $view . " " . $edit . " " . $delete;
 
                         return $buttons;
@@ -164,7 +177,13 @@ class DepotController extends Controller
 
             ( new Column( 'actions', '' ) )
                 ->setValueCalculator( function ( $row ) use ( $depot ) {
-                    return link_to_route( 'depots.unload_item', '', [ $depot, $row->pivot->id ], [ 'class' => 'btn btn-sm btn-info fa fa-pencil' ] );
+                    return link_to_route( 'depots.unload_item', '', [ $depot, $row->pivot->id ], [
+                        'class' => 'btn btn-sm btn-info fa fa-pencil',
+
+                        'data-toggle'    => "tooltip",
+                        'data-placement' => "top",
+                        'title'          => "Load/Unload",
+                    ] );
 
                 } ),
 
@@ -181,7 +200,9 @@ class DepotController extends Controller
 
         $row = $grid->getTableBody()->getChildrenRecursive()->findByProperty( 'tag_name', 'tr', true );
         $row->setAttribute( 'class', 'bg-navy text-light' );
-
+        $row->setAttribute( 'data-toggle', "tooltip" );
+        $row->setAttribute( 'data-placement', "left" );
+        $row->setAttribute( 'title', "Details" );
         return view( 'depots.view', compact( 'depot', 'grid' ) );
     }
 

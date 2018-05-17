@@ -6,7 +6,12 @@
         <div class="card-header bg-dark text-white">
                 <div class="pull-left">@lang('global.depots.title')</div>
 	        @can('depots_manage')
-		        <a href="{{ route('depots.create') }}" class="pull-right btn btn-sm btn-success">@lang('global.app_add_new')</a>
+		        <a href="{{ route('depots.create') }}"
+		           class="pull-right btn btn-sm btn-success"
+		           data-toggle="tooltip"
+		           data-placement="top"
+		           title="Add New Item"
+		        >@lang('global.app_add_new')</a>
 	        @endcan
         </div>
 
@@ -18,6 +23,6 @@
 
 @section('javascript')
 	<script>
-    
+  
     </script>
 @endsection

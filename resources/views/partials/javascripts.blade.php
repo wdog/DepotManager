@@ -5,6 +5,9 @@
         'placeholder': '-'
         //    'minimumResultsForSearch': Infinity,
     });
+
+    $('[data-toggle="tooltip"]').tooltip()
+    
 </script>
 
 <!-- DELETER -->
