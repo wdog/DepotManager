@@ -25,7 +25,7 @@ class StoreItemProjectRequest extends FormRequest
     {
         return [
             'item_id' => 'required',
-            'qta_req' => 'required|integer|min:0',
+            'qta_req' => 'required|integer',
         ];
     }
 }
