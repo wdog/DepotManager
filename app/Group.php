@@ -33,4 +33,12 @@ class Group extends Model
     {
         return $this->belongsToMany( Project::class );
     }
+
+    /**
+     * @param $value
+     */
+    public function setNameAttribute( $value )
+    {
+        $this->attributes[ 'name' ] = strtoupper( $value );
+    }
 }

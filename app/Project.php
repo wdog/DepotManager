@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -71,4 +72,6 @@ class Project extends Model
     {
         $this->attributes[ 'name' ] = strtoupper( $value );
     }
+
+
 }

@@ -18,6 +18,6 @@
 
 @section('javascript')
 	<script>
-    
+		$('.hide').parents('tr').hide();
     </script>
 @endsection

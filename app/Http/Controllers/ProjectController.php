@@ -10,6 +10,7 @@ use App\ItemProject;
 use App\Movement;
 use App\Project;
 use App\Utils\ItemProjectDetail;
+use DeepCopy\f001\A;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
@@ -20,11 +21,15 @@ use ViewComponents\Grids\Component\ColumnSortingControl;
 use ViewComponents\Grids\Component\CsvExport;
 use ViewComponents\Grids\Component\DetailsRow;
 use ViewComponents\Grids\Grid;
+use ViewComponents\ViewComponents\Component\Control\FilterControl;
 use ViewComponents\ViewComponents\Component\Control\PageSizeSelectControl;
 use ViewComponents\ViewComponents\Component\Control\PaginationControl;
+use ViewComponents\ViewComponents\Component\Control\SelectFilterControl;
 use ViewComponents\ViewComponents\Component\ManagedList\RecordView;
+use ViewComponents\ViewComponents\Component\TemplateView;
 use ViewComponents\ViewComponents\Customization\CssFrameworks\BootstrapStyling;
 use ViewComponents\ViewComponents\Data\ArrayDataProvider;
+use ViewComponents\ViewComponents\Data\Operation\FilterOperation;
 use ViewComponents\ViewComponents\Input\InputSource;
 
 /**
@@ -44,14 +49,13 @@ class ProjectController extends Controller
         if ( !Gate::allows( 'projects_manage' ) ) {
             return abort( 401 );
         }
+        $provider = new EloquentDataProvider( Project::with( 'groups' )->orderBy( 'closed' ) );
 
-        $provider = new EloquentDataProvider( Project::orderBy( 'closed' ) );
         $input = new InputSource( $_GET );
 
         $columns = [
             ( new Column( 'name', trans( 'global.name' ) ) )
                 ->setValueFormatter( function ( $val, $row ) {
-
                     if ( $row->closed == true ) {
                         $rs = "<del class='text-danger'>" . $row->name . "</del>";
                     } else {
@@ -62,10 +66,17 @@ class ProjectController extends Controller
                 } ),
             // GOUPS
             ( new Column( 'groups', trans( 'global.groups.title' ) ) )
-                ->setValueFormatter( function ( $groups ) {
+                ->setValueFormatter( function ( $groups ) use ( $input ) {
+
+                    $filter = $input( 'groups_id' )->getValue();
+
+                    if ( $filter && $groups->where( 'id', $filter )->count() == 0 ) {
+                        return "<div class='hide'>X</div>";
+
+                    }
                     $rs = "";
-                    foreach ( $groups as $group ) {
-                        $rs .= "<span class='badge badge-info'>" .  $group->name. "</span> ";
+                    foreach ( $groups->sortBy( 'name' ) as $group ) {
+                        $rs .= "<span class='badge badge-info'>" . $group->name . "</span> ";
                     }
                     return $rs;
                 } ),
@@ -85,6 +96,12 @@ class ProjectController extends Controller
             new PageSizeSelectControl( $input->option( 'ps', 50 ), [ 10, 50, 100, 500 ] ),
             new PaginationControl( $input->option( 'page', 1 ), 5 ),
             new ColumnSortingControl( 'name', $input->option( 'sort' ) ),
+
+            new FilterControl( 'name', FilterOperation::OPERATOR_STR_CONTAINS, $input->option( 'name' ) ),
+            // group filter -> use css to hide
+            ( new SelectFilterControl( 'groups', [ '---' ] + Group::pluck( 'name', 'id' )->toArray(), $input( 'groups.id' ) ) ),
+
+
         ];
 
 
@@ -161,10 +178,11 @@ class ProjectController extends Controller
             } ),
             new DetailsRow( new ItemProjectDetail() ),
             new CsvExport( $input->option( 'csv' ) ),
-
         ];
         $grid = new Grid( $provider, $columns );
         BootstrapStyling::applyTo( $grid );
+
+
         $grid->getColumn( 'code' )->getDataCell()->setAttribute( 'class', 'text-right fit-cell' );
         $grid->getColumn( 'pivot.qta_req' )->getDataCell()->setAttribute( 'class', 'text-right fit-cell' );
         $grid->getColumn( 'usage' )->getDataCell()->setAttribute( 'class', 'text-right fit-cell' );
@@ -230,7 +248,7 @@ class ProjectController extends Controller
 
     /**
      * @param Project $project
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function addItem( Project $project )
     {
@@ -278,7 +296,7 @@ class ProjectController extends Controller
 
         foreach ( $missings as $missing ) {
 
-            $project->items()->attach( $missing->item , ['qta_req' => -1 * $missing->qta ]);
+            $project->items()->attach( $missing->item, [ 'qta_req' => -1 * $missing->qta ] );
         }
 
         return redirect()->route( 'projects.show', $project );
