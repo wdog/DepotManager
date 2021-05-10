@@ -2652,6 +2652,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/http-foundation/zipball/eded33daef1147be7ff1249706be9a49fe2c7a44",
                 "reference": "eded33daef1147be7ff1249706be9a49fe2c7a44",
+
                 "shasum": ""
             },
             "require": {
@@ -2693,6 +2694,7 @@
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
             "time": "2020-04-18T20:23:17+00:00"
+
         },
         {
             "name": "symfony/http-kernel",
@@ -2794,6 +2796,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/81ffd3a9c6d707be22e3012b827de1c9775fc5ac",
                 "reference": "81ffd3a9c6d707be22e3012b827de1c9775fc5ac",
+
                 "shasum": ""
             },
             "require": {
@@ -2806,6 +2809,7 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.15-dev"
+
                 }
             },
             "autoload": {
@@ -2853,6 +2857,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/2a18e37a489803559284416df58c71ccebe50bf0",
                 "reference": "2a18e37a489803559284416df58c71ccebe50bf0",
+
                 "shasum": ""
             },
             "require": {
@@ -2863,6 +2868,7 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.15-dev"
+
                 }
             },
             "autoload": {
@@ -2899,6 +2905,7 @@
                 "shim"
             ],
             "time": "2020-02-27T09:26:54+00:00"
+
         },
         {
             "name": "symfony/process",
